@@ -1,0 +1,3 @@
+﻿  Network.cpp
+c:\users\marke\source\repos\hew_alpha\hew_alpha\network.cpp(53): warning C4715: 'Network::Initialize': 値を返さないコントロール パスがあります。
+  Hew_Alpha.vcxproj -> C:\Users\marke\source\repos\Hew_Alpha\Debug\Hew_Alpha.exe
