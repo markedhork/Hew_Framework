@@ -64,7 +64,7 @@ bool RenderWindow::ProcessMessages()
 		DispatchMessage(&msg);		//Dispatch message to our Window Proc for this window.
 	}
 
-	//Check if the windwo was closed
+	//Check if the window was closed
 	if (msg.message == WM_NULL)
 	{
 		if (!IsWindow(this->handle))
@@ -95,9 +95,16 @@ LRESULT CALLBACK HandleMsgRedirect(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 {
 	switch (uMsg)
 	{
-		//ALL other messages
+	//ALL other messages
 	case WM_CLOSE:
-		DestroyWindow(hwnd);
+		if (MessageBox(hwnd, "本当に終了してよろしいですか？", "確認", MB_OKCANCEL | MB_DEFBUTTON2) == IDOK) {
+
+			DestroyWindow(hwnd); // 指定のウィンドウにWM_DESTROYメッセージを送る
+			OutputDebugStringA("DestroyWindow\n");
+		}
+		return 0;
+	case WM_DESTROY: // ウィンドウの破棄メッセージ
+		PostQuitMessage(0); // WM_QUITメッセージの送信
 		return 0;
 
 	default:

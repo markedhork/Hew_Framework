@@ -1,30 +1,47 @@
 #pragma once
+#pragma comment(lib,"d3d9.lib")
+#pragma comment(lib,"d3dx9.lib")
+
 #include "Vertex.h"
 #include <d3d9.h>
 #include "..\\Timer.h"
 #include "Camera.h"
-#include "Model.h"
 #include <string>
-#include <wrl/client.h>
+#include "Texture.h"
+
 
 class Graphics
 {
 public:
+	Graphics() {};
 	bool Initialize(HWND hwnd, int width, int height);
 	void RenderFrame();
+	void Draw(int index);
+	void Set(Sprite* sprite, int total);
 	Camera camera;
-	Model model;
 private:
 	bool InitializeDirectX(HWND hwnd);
-	bool InitializeScene();
 	bool UninitializeDirectX(HWND hwnd);
+	bool InitializeVB();
 
+	LPDIRECT3DDEVICE9	pD3DDevice;
+	LPDIRECT3D9			pD3D;
 
-	LPDIRECT3DDEVICE9 pD3DDevice;
-	LPDIRECT3D9 pD3D;
+	Texture				textureController;
 
+	int					windowWidth = 0;
+	int					windowHeight = 0;
+	Timer				fpsTimer;
+	int *				pSpritesIndex;
+	int					totalSprites;
+	Sprite *			pSprite;
 
-	int windowWidth = 0;
-	int windowHeight = 0;
-	Timer fpsTimer;
+	D3DXMATRIX			mtxWorld;												//ワールドマトリクス
+
+	LPDIRECT3DVERTEXBUFFER9 g_pD3DVtxBuff;
+	LPDIRECT3DVERTEXBUFFER9 pVB_Sprite;
+
 };
+
+
+
