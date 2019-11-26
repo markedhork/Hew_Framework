@@ -40,7 +40,7 @@ unsigned char KeyboardClass::ReadChar()
 {
 	if (this->charBuffer.empty())					//If no keys to be read?
 	{
-		return 0u;									//return 0(NULL char)
+		return 0;									//return 0(NULL char)
 	}
 	else
 	{
