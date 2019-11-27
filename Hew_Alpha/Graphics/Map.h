@@ -34,5 +34,13 @@ static BYTE mapC[MAP_Y][MAP_X] =
 	{1,2,2,2,2},
 	{1,1,1,1,1},
 };
-
-static BYTE Build[MAX_BUILD] = {1,2,2,3,2,2,2};
+//STYLE D
+static BYTE mapD[MAP_Y][MAP_X] =
+{
+	{2,1,2,1,2},
+	{1,1,2,1,1},
+	{1,2,2,2,1},
+	{1,1,2,1,1},
+	{2,1,2,1,2},
+};
+static BYTE Build[MAX_BUILD] = {1,2,3,4,4};
