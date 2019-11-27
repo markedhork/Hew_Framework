@@ -1,15 +1,15 @@
 #include "Game1.h"
-Sprite Game1_sprite[] = {
+static Sprite Game1_sprite[] = {
 	{D3DXVECTOR3(0,0,-0.2),D3DXVECTOR3(0,0,0),D3DXVECTOR3(1,1,1),0},
 	//{D3DXVECTOR3(0,0,5),D3DXVECTOR3(0,0,0),D3DXVECTOR3(10,10,1),1}
 };
 
 // 読み込みテクスチャ数
-static const int SPRITE_COUNT = sizeof(Game1_sprite) / sizeof(Game1_sprite[0]);
+static const int SPRITE_COUNT_G1 = sizeof(Game1_sprite) / sizeof(Game1_sprite[0]);
 
 bool Game1::Set()
 {
-	this->gfx->Set(Game1_sprite, SPRITE_COUNT);
+	this->gfx->Set(Game1_sprite, SPRITE_COUNT_G1);
 	this->gfx->camera.SetPosition(0, 0, -3.0f);
 	return true;
 }

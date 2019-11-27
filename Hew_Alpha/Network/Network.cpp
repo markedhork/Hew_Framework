@@ -21,9 +21,12 @@ bool Network::Uninitialize()
 bool Network::Initialize()
 {
 	// Initialize Winsock
-	iResult = WSAStartup(MAKEWORD(2, 2), &wsa_data);
+	int iResult = WSAStartup(MAKEWORD(2, 2), &wsa_data);
 	if (iResult != 0) {
-		std::cout << "WSAStartup() failed with error: " << iResult << std::endl;
+		std::string outmsg = "WSAStartup() FAILED: ";
+		outmsg += std::to_string(iResult);
+		outmsg += "\n";
+		OutputDebugStringA(outmsg.c_str());
 		return false;
 	}
 }

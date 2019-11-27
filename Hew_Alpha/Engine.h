@@ -1,7 +1,10 @@
 #pragma once
+#define WIN32_LEAN_AND_MEAN
+#include "Network/Server.h"
+#include "Network/Client.h"
+
 #include "WindowContainer.h"
 #include "Timer.h"
-#include "Network/Network.h"
 #include "Scene/Title.h"
 #include "Scene/Lobby.h"
 #include "Scene/Game1.h"
@@ -16,7 +19,7 @@ public:
 	void Update();
 	void RenderFrame();
 private:
-	Timer timer;
-	Network* network;
-	SceneMgr* pScene;
+	Timer			timer;
+	Network*		network;
+	SceneMgr*		pScene;
 };

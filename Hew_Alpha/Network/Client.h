@@ -1,15 +1,7 @@
 #pragma once
 #include "Network.h"
 
-struct client_type
-{
-	//============================
-	//Game Param
-	BYTE rec;
 
-	//============================
-	SOCKET socket;
-};
 
 class Client :
 	public Network
@@ -17,11 +9,12 @@ class Client :
 public:
 	Client();
 	bool Set();
-	int Process(client_type &new_client);
+	void Process();
 private:
+	void ProcessClient();
 	struct addrinfo *result = NULL, *ptr = NULL, hints;
 	std::string sent_message = "";
-	client_type client = { 0,INVALID_SOCKET };
+	client_type client = { INVALID_SOCKET };
 	std::string message;
 };
 

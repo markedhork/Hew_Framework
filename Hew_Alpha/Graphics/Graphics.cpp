@@ -104,7 +104,7 @@ void Graphics::Draw(int index)
 	this->pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	this->pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	this->pD3DDevice->SetTexture(0, this->textureController.GetTexture((TextureIndex)index));
+	this->pD3DDevice->SetTexture(0, this->textureController.GetTexture((TextureIndex)this->pSprite[index].index));
 	this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
 }
 

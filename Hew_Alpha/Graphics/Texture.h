@@ -12,7 +12,7 @@ typedef struct TextureFile_tag
 } TextureFile;
 
 static const TextureFile g_TextureFiles[] = {
-	{ "asset/texture/airou.png", 256,  256 },
+	{ "asset/texture/airou.png", 256, 256 },
 	{ "asset/texture/KIZUNA.jpg", 225, 225 }
 };
 

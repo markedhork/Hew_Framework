@@ -1,13 +1,17 @@
 #pragma once
-
+#include "..//Network/Network.h"
 #include "..//Graphics/Graphics.h"
 #include "..//Mouse/MouseClass.h"
 #include "..//Keyboard/KeyboardClass.h"
 
+
+
+
 class SceneMgr
 {
 public:
-	bool Initialize(Graphics* pGfx, KeyboardClass* pKeyboard, MouseClass* pMouse, Timer *pTimer)
+	bool Initialize(Graphics* pGfx, KeyboardClass* pKeyboard, 
+		MouseClass* pMouse, Timer *pTimer,Network *network)
 	{
 		this->gfx = pGfx;
 		this->keyboard = pKeyboard;
@@ -23,4 +27,5 @@ protected:
 	KeyboardClass* keyboard;
 	MouseClass* mouse;
 	Timer *timer;
+	Network *network;
 };

@@ -14,19 +14,21 @@ bool Client::Set()
 	hints.ai_protocol = IPPROTO_TCP;
 
 	// Resolve the server address and port
-	iResult = getaddrinfo(static_cast<LPCTSTR>(IP_ADDRESS), DEFAULT_PORT, &hints, &result);
+	int iResult = getaddrinfo(static_cast<LPCTSTR>(IP_ADDRESS), DEFAULT_PORT, &hints, &result);
 	
 	// Attempt to connect to an address until one succeeds
 	for (ptr = result; ptr != NULL; ptr = ptr->ai_next) {
 
 		// Create a SOCKET for connecting to server
-		client.socket = socket(ptr->ai_family, ptr->ai_socktype,
-			ptr->ai_protocol);
+		client.socket = socket(ptr->ai_family, ptr->ai_socktype,ptr->ai_protocol);
 		if (client.socket == INVALID_SOCKET) {
-			std::cout << "socket() failed with error: " << WSAGetLastError() << std::endl;
+			int error = WSAGetLastError();
+			string outmsg = "socket() failed Error: ";
+			outmsg += to_string(error);
+			outmsg += "\n";
+			OutputDebugStringA(outmsg.c_str());
 			WSACleanup();
-			system("pause");
-			return 1;
+			return false;
 		}
 
 		// Connect to server.
@@ -44,28 +46,11 @@ bool Client::Set()
 	return true;
 }
 
-int Client::Process(client_type &new_client)
+void Client::Process()
 {
-	while (1)
-	{
-		memset(&new_client.rec, 0, sizeof(new_client.rec));
+	this->target_thread = thread(&Client::ProcessClient, this);
+}
 
-		if (new_client.socket != 0)
-		{
-			int iResult = recv(new_client.socket, (char*)new_client.rec, DEFAULT_BUFLEN, 0);
-
-			if (iResult != SOCKET_ERROR)
-				std::cout << new_client.rec << std::endl;
-			else
-			{
-				std::cout << "recv() failed: " << WSAGetLastError() << std::endl;
-				break;
-			}
-		}
-	}
-
-	if (WSAGetLastError() == WSAECONNRESET)
-		std::cout << "The server has disconnected" << std::endl;
-
-	return 0;
+void Client::ProcessClient()
+{
 }

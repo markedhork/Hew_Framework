@@ -1,33 +1,3 @@
-﻿  Engine.cpp
+﻿  Graphics.cpp
 d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-  Camera.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\camera.cpp(106): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\camera.cpp(106): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\camera.cpp(107): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\camera.cpp(113): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  Graphics.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-  Texture.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-  KeyboardClass.cpp
-  KeyboardEvent.cpp
-  MouseClass.cpp
-  MouseEvent.cpp
-  RenderWindow.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-  Game1.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-d:\hew\hew_alpha - 副本\hew_alpha\scene\game1.cpp(3): warning C4305: 'argument': truncation from 'double' to 'FLOAT'
-d:\hew\hew_alpha - 副本\hew_alpha\scene\game1.cpp(19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Game2.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-  Lobby.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-  Title.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-  WindowContainer.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-  main.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-  Generating Code...
   Hew_Alpha.vcxproj -> D:\HEW\Hew_Alpha - 副本\Debug\Hew_Alpha.exe

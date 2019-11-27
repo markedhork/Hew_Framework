@@ -8,5 +8,6 @@ public:
 	bool Set();
 	bool Update();
 	bool Draw();
+private:
 };
 
