@@ -4,6 +4,11 @@
 #include "..//Mouse/MouseClass.h"
 #include "..//Keyboard/KeyboardClass.h"
 
+struct PLAYER
+{
+	int PX, PY;
+};
+
 class SceneMgr
 {
 public:

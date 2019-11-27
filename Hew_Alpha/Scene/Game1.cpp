@@ -13,11 +13,14 @@ bool Game1::Set()
 {
 	this->gfx->Set(Game1_sprite, SPRITE_COUNT_G1);
 	this->gfx->camera.SetPosition(0, 1.1f, -5.0f);
+	this->player.PX = 2;
+	this->player.PY = 0;
 	return true;
 }
 
 bool Game1::Update()
 {
+
 	float dt = this->timer->GetMilisecondsElapsed();
 	this->timer->Restart();
 
@@ -52,29 +55,80 @@ bool Game1::Update()
 
 	const float cameraSpeed = 0.01f;
 
+	if (this->keyboard->KeyIsPressed('Q'))
+	{
+		this->player.PX--;
+		this->player.PY++;
+	}
+	else if (this->keyboard->KeyIsPressed('W'))
+	{
+		this->player.PY++;
+	}
+	else if (this->keyboard->KeyIsPressed('E'))
+	{
+		this->player.PX++;
+		this->player.PY++;
+	}
+	else if (this->keyboard->KeyIsPressed('A'))
+	{
+		this->player.PX--;
+	}
+	else if (this->keyboard->KeyIsPressed('D'))
+	{
+		this->player.PX++;
 
-	if (this->keyboard->KeyIsPressed('W'))
+	}
+	else if (this->keyboard->KeyIsPressed('Z'))
+	{
+		this->player.PX--;
+		this->player.PY--;
+		if (this->player.PY >= 0 && this->player.PX >= 0 && this->player.PX < MAP_X)
+		{
+			if (Build[this->player.PY / MAP_Y])
+			{
+
+			}
+			PLAYER_STATE.pos.x--;
+			PLAYER_STATE.pos.y--;
+		}
+		else
+		{
+			this->player.PX++;
+			this->player.PY++;
+		}
+		
+	}
+	else if (this->keyboard->KeyIsPressed('X'))
+	{
+		this->player.PY--;
+	}
+	else if (this->keyboard->KeyIsPressed('C'))
+	{
+		this->player.PX++;
+		this->player.PY--;
+	}
+
+	if (this->keyboard->KeyIsPressed(VK_UP))
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetForwardVector()*cameraSpeed*dt);
 	}
-	if (this->keyboard->KeyIsPressed('S'))
+	if (this->keyboard->KeyIsPressed(VK_DOWN))
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetBackwardVector()*cameraSpeed*dt);
 	}
-	if (this->keyboard->KeyIsPressed('A'))
+	if (this->keyboard->KeyIsPressed(VK_LEFT))
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetLeftVector()*cameraSpeed*dt);
 	}
-	if (this->keyboard->KeyIsPressed('D'))
+	if (this->keyboard->KeyIsPressed(VK_RIGHT))
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetRightVector()*cameraSpeed*dt);
 	}
 	if (this->keyboard->KeyIsPressed(VK_SPACE))
 	{
 		this->gfx->camera.AdjustPosition(0.0f, cameraSpeed*dt, 0.0f);
-
 	}
-	if (this->keyboard->KeyIsPressed('C'))
+	if (this->keyboard->KeyIsPressed('N'))
 	{
 		this->gfx->camera.AdjustPosition(0.0f, -cameraSpeed * dt, 0.0f);
 	}

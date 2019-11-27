@@ -1,6 +1,7 @@
 #pragma once
 #include "SceneMgr.h"
 
+
 class Game2 :
 	public SceneMgr
 {
@@ -9,5 +10,6 @@ public:
 	bool Update();
 	bool Draw();
 private:
+	PLAYER player;
 };
 

@@ -1,11 +1,6 @@
 #pragma once
 #include "SceneMgr.h"
-
-struct PLAYER
-{
-	int PX, PY;
-};
-
+#define PLAYER_STATE Game1_sprite[0]
 
 class Game1 :
 	public SceneMgr
@@ -15,5 +10,6 @@ public:
 	bool Update();
 	bool Draw();
 private:
+	PLAYER player;
 };
 
