@@ -1,3 +1,5 @@
-﻿  Graphics.cpp
+﻿  Game1.cpp
 d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
+d:\hew\hew_alpha - 副本\hew_alpha\scene\game1.cpp(5): warning C4305: 'argument': truncation from 'double' to 'FLOAT'
+d:\hew\hew_alpha - 副本\hew_alpha\scene\game1.cpp(22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   Hew_Alpha.vcxproj -> D:\HEW\Hew_Alpha - 副本\Debug\Hew_Alpha.exe

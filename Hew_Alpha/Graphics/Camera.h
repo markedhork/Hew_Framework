@@ -3,7 +3,7 @@
 //プロジェクション用パラメータ
 #define VIEW_ANGLE		(D3DXToRadian(45.0f))								//ビュー平面の視野角
 #define VIEW_NEAR_Z		(0.2f)												//ビュー平面のNearZ値
-#define VIEW_FAR_Z		(1000.0f)	
+#define VIEW_FAR_Z		(50.0f)	
 class Camera
 {
 public:

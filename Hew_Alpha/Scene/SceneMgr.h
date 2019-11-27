@@ -4,9 +4,6 @@
 #include "..//Mouse/MouseClass.h"
 #include "..//Keyboard/KeyboardClass.h"
 
-
-
-
 class SceneMgr
 {
 public:

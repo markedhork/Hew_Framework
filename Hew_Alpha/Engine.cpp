@@ -13,7 +13,7 @@ bool Engine::Initialize(HINSTANCE hInstance, std::string window_title, std::stri
 		return false;
 	}
 
-	this->Set(3);
+	this->Set(2);
 	return true;
 }
 

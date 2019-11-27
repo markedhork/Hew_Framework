@@ -8,7 +8,7 @@
 #include "Camera.h"
 #include <string>
 #include "Texture.h"
-
+#include "Map.h"
 
 class Graphics
 {

@@ -193,7 +193,7 @@ bool Graphics::InitializeVB()
 	this->pD3DDevice->CreateVertexBuffer(
 		sizeof(VERTEX_3D) * 4,
 		D3DUSAGE_WRITEONLY,
-		FVF_VERTEX2D,
+		FVF_VERTEX3D,
 		D3DPOOL_MANAGED,
 		&this->pVB_Sprite,
 		NULL);
