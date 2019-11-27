@@ -39,7 +39,7 @@ private:
 
 	D3DXMATRIX			mtxWorld;												//ワールドマトリクス
 
-	LPDIRECT3DVERTEXBUFFER9 g_pD3DVtxBuff;
+	LPDIRECT3DVERTEXBUFFER9 pD3DVtxBuff;
 	LPDIRECT3DVERTEXBUFFER9 pVB_Sprite;
 
 };

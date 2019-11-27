@@ -52,44 +52,6 @@ void Graphics::RenderFrame()
 	this->pD3DDevice->Present(NULL, NULL, NULL, NULL);
 }
 
-void Graphics::Draw()
-{
-	for (int index = 0; index < totalSprites; index++)
-	{
-		D3DXMATRIX mtxScl;					//スケーリング行列
-		D3DXMATRIX mtxRot;					//回転行列
-		D3DXMATRIX mtxTrs;					//平行移動行列
-
-		D3DXMatrixIdentity(&mtxWorld);	//ワールド行列の単位行列の初期化
-
-			//スケール行列を作成＆ワールド行列へ合成
-		D3DXMatrixScaling(&mtxScl, this->pSprite[index].size.x, this->pSprite[index].size.y, this->pSprite[index].size.z);
-		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxScl);	//World*Scaling
-
-		//回転行列を作成＆ワールド行列への合成
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, this->pSprite[index].rot.y, this->pSprite[index].rot.x, this->pSprite[index].rot.z);
-		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);	//World*Rotation
-
-		//平行移動行列を作成＆ワールド行列への合成
-		D3DXMatrixTranslation(&mtxTrs, this->pSprite[index].pos.x, this->pSprite[index].pos.y, this->pSprite[index].pos.z);
-		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrs);	//World*Tranlation
-
-		//ワールドマトリックスを設定
-		this->pD3DDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
-
-		this->pD3DDevice->SetStreamSource(0, this->g_pD3DVtxBuff, 0, sizeof(VERTEX_3D));
-		this->pD3DDevice->SetFVF(FVF_VERTEX3D);
-
-		this->pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-		this->pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
-		this->pD3DDevice->SetTexture(0, this->textureController.GetTexture((TextureIndex)this->pSprite[index].index));
-		this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
-	}
-}
-
-
-
 bool Graphics::InitializeDirectX(HWND hwnd)
 {
 	// Direct3Dインターフェースの取得
@@ -212,14 +174,14 @@ bool Graphics::InitializeVB()
 		D3DUSAGE_WRITEONLY,								//頂点データの使用法
 		FVF_VERTEX3D,									//使用する頂点フォーマット
 		D3DPOOL_MANAGED,								//リソースのバッファを保持するメモリクラスを指定
-		&g_pD3DVtxBuff,									//頂点バッファインターフェースへのポインタ
+		&pD3DVtxBuff,									//頂点バッファインターフェースへのポインタ
 		NULL);											//NULLに設定
 
 	//頂点バッファの中身を埋める
 	VERTEX_3D *pVtx2;
 
 	//頂点データの範囲をロックし、頂点バッファへのポインタを取得
-	g_pD3DVtxBuff->Lock(0, 0, (void**)&pVtx2, 0);
+	pD3DVtxBuff->Lock(0, 0, (void**)&pVtx2, 0);
 
 	//1
 	/*****************************************************************************************/
@@ -378,30 +340,210 @@ bool Graphics::InitializeVB()
 	pVtx2[23].tex = D3DXVECTOR2(0.0f, 1.0f);
 
 	//頂点データをアンロックする
-	g_pD3DVtxBuff->Unlock();
+	pD3DVtxBuff->Unlock();
 
 	return true;
 }
 
 void Graphics::DrawWall()
 {
-	D3DXMatrixIdentity(&mtxWorld);	//ワールド行列の単位行列の初期化
+	for (int i = 0; i < MAX_BUILD; i++)
+	{
+		int mapType = Build[i];
+		if (!mapType)
+		{
+			break;
+		}
+		switch (mapType)
+		{
+		case 1:
+		{
+			for (int y = 0; y < MAP_Y; y++)
+			{
+				for (int x = 0; x < MAP_X; x++)
+				{
+					D3DXMATRIX mtxTrs;					//平行移動行列
 
-	//ワールドマトリックスを設定
-	this->pD3DDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
-	//描画したいポリゴンの頂点バッファをデータストリーム(データの通り道)にセット
-	this->pD3DDevice->SetStreamSource(0, g_pD3DVtxBuff, 0, sizeof(VERTEX_3D));
-	//描画したいポリゴンの頂点フォーマットを設定
-	this->pD3DDevice->SetFVF(FVF_VERTEX3D);
+					D3DXVECTOR3 pos = D3DXVECTOR3(-(float)((float)MAP_X / 2) + (float)x , i * MAP_Y + y, 0);					//位置
 
-	//ポリゴンの描画
-	this->pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	this->pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	this->pD3DDevice->SetTexture(0, this->textureController.GetTexture(TEXTURE_INDEX_KIZUNA));
-	this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
-	this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 4, 2);
-	this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 8, 2);
-	this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 12, 2);
-	this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 16, 2);
-	this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 20, 2);
+					D3DXMatrixIdentity(&mtxWorld);	//ワールド行列の単位行列の初期化
+
+					//平行移動行列を作成＆ワールド行列への合成
+					D3DXMatrixTranslation(&mtxTrs, pos.x, pos.y, pos.z);
+					D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrs);	//World*Tranlation
+
+					//ワールドマトリックスを設定
+					this->pD3DDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
+					//描画したいポリゴンの頂点バッファをデータストリーム(データの通り道)にセット
+					this->pD3DDevice->SetStreamSource(0, pD3DVtxBuff, 0, sizeof(VERTEX_3D));
+					//描画したいポリゴンの頂点フォーマットを設定
+					this->pD3DDevice->SetFVF(FVF_VERTEX3D);
+
+					int check = mapA[y][x];
+					//ポリゴンの描画
+					switch (check)
+					{
+					case 1:
+						this->pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
+						break;
+					case 2:
+						this->pD3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+						break;
+					default:
+						break;
+					}
+					this->pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+					this->pD3DDevice->SetTexture(0, this->textureController.GetTexture(TEXTURE_INDEX_KIZUNA));
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 4, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 8, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 12, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 16, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 20, 2);
+				}
+			}
+		}
+			break;
+		case 2:
+		{
+			for (int y = 0; y < MAP_Y; y++)
+			{
+				for (int x = 0; x < MAP_X; x++)
+				{
+					D3DXMATRIX mtxTrs;					//平行移動行列
+
+					D3DXVECTOR3 pos = D3DXVECTOR3(-(float)((float)MAP_X / 2) + (float)x, i * MAP_Y + y, 0);					//位置
+
+					D3DXMatrixIdentity(&mtxWorld);	//ワールド行列の単位行列の初期化
+
+					//平行移動行列を作成＆ワールド行列への合成
+					D3DXMatrixTranslation(&mtxTrs, pos.x, pos.y, pos.z);
+					D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrs);	//World*Tranlation
+
+					//ワールドマトリックスを設定
+					this->pD3DDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
+					//描画したいポリゴンの頂点バッファをデータストリーム(データの通り道)にセット
+					this->pD3DDevice->SetStreamSource(0, pD3DVtxBuff, 0, sizeof(VERTEX_3D));
+					//描画したいポリゴンの頂点フォーマットを設定
+					this->pD3DDevice->SetFVF(FVF_VERTEX3D);
+
+					int check = mapB[y][x];
+					//ポリゴンの描画
+					switch (check)
+					{
+					case 1:
+						this->pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
+						break;
+					case 2:
+						this->pD3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+						break;
+					default:
+						break;
+					}
+					this->pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+					this->pD3DDevice->SetTexture(0, this->textureController.GetTexture(TEXTURE_INDEX_KIZUNA));
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 4, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 8, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 12, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 16, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 20, 2);
+				}
+			}
+		}
+			break;
+		case 3:
+		{
+			for (int y = 0; y < MAP_Y; y++)
+			{
+				for (int x = 0; x < MAP_X; x++)
+				{
+					D3DXMATRIX mtxTrs;					//平行移動行列
+
+					D3DXVECTOR3 pos = D3DXVECTOR3(-(float)((float)MAP_X / 2) + (float)x, i * MAP_Y + y, 0);					//位置
+
+					D3DXMatrixIdentity(&mtxWorld);	//ワールド行列の単位行列の初期化
+
+					//平行移動行列を作成＆ワールド行列への合成
+					D3DXMatrixTranslation(&mtxTrs, pos.x, pos.y, pos.z);
+					D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrs);	//World*Tranlation
+
+					//ワールドマトリックスを設定
+					this->pD3DDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
+					//描画したいポリゴンの頂点バッファをデータストリーム(データの通り道)にセット
+					this->pD3DDevice->SetStreamSource(0, pD3DVtxBuff, 0, sizeof(VERTEX_3D));
+					//描画したいポリゴンの頂点フォーマットを設定
+					this->pD3DDevice->SetFVF(FVF_VERTEX3D);
+
+					int check = mapC[y][x];
+					//ポリゴンの描画
+					switch (check)
+					{
+					case 1:
+						this->pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+
+						break;
+					case 2:
+						this->pD3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+						break;
+					default:
+						break;
+					}
+					this->pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+					this->pD3DDevice->SetTexture(0, this->textureController.GetTexture(TEXTURE_INDEX_KIZUNA));
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 4, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 8, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 12, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 16, 2);
+					this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 20, 2);
+				}
+			}
+		}
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void Graphics::Draw()
+{
+	for (int index = 0; index < totalSprites; index++)
+	{
+		D3DXMATRIX mtxScl;					//スケーリング行列
+		D3DXMATRIX mtxRot;					//回転行列
+		D3DXMATRIX mtxTrs;					//平行移動行列
+
+		D3DXMatrixIdentity(&mtxWorld);	//ワールド行列の単位行列の初期化
+
+		//スケール行列を作成＆ワールド行列へ合成
+		D3DXMatrixScaling(&mtxScl, this->pSprite[index].size.x, this->pSprite[index].size.y, this->pSprite[index].size.z);
+		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxScl);	//World*Scaling
+
+		//回転行列を作成＆ワールド行列への合成
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, this->pSprite[index].rot.y, this->pSprite[index].rot.x, this->pSprite[index].rot.z);
+		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);	//World*Rotation
+
+		//平行移動行列を作成＆ワールド行列への合成
+		D3DXMatrixTranslation(&mtxTrs, this->pSprite[index].pos.x, this->pSprite[index].pos.y, this->pSprite[index].pos.z);
+		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrs);	//World*Tranlation
+
+		//ワールドマトリックスを設定
+		this->pD3DDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
+
+		this->pD3DDevice->SetStreamSource(0, this->pD3DVtxBuff, 0, sizeof(VERTEX_3D));
+		this->pD3DDevice->SetFVF(FVF_VERTEX3D);
+
+		this->pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+		this->pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+		this->pD3DDevice->SetTexture(0, this->textureController.GetTexture((TextureIndex)this->pSprite[index].index));
+		this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
+	}
 }
