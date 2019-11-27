@@ -13,7 +13,6 @@ bool Game1::Set()
 {
 	this->gfx->Set(Game1_sprite, SPRITE_COUNT_G1);
 	this->gfx->camera.SetPosition(0, 1.1f, -5.0f);
-	memset(Build, 0, sizeof(Build));
 	return true;
 }
 

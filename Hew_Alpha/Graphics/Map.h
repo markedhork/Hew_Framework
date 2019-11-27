@@ -35,4 +35,4 @@ static BYTE mapC[MAP_Y][MAP_X] =
 	{1,1,1,1,1},
 };
 
-static BYTE Build[MAX_BUILD] = {};
+static BYTE Build[MAX_BUILD] = {1};

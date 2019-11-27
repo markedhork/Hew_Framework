@@ -16,13 +16,14 @@ public:
 	Graphics() {};
 	bool Initialize(HWND hwnd, int width, int height);
 	void RenderFrame();
-	void Draw(int index);
 	void Set(Sprite* sprite, int total);
 	Camera camera;
 private:
 	bool InitializeDirectX(HWND hwnd);
 	bool UninitializeDirectX(HWND hwnd);
 	bool InitializeVB();
+	void Draw();
+	void DrawWall();
 
 	LPDIRECT3DDEVICE9	pD3DDevice;
 	LPDIRECT3D9			pD3D;
