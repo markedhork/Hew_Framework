@@ -11,8 +11,10 @@ public:
 	enum EventType
 	{
 		LPress,
+		LDoubleClick,
 		LRelease,
 		RPress,
+		RDoubleClick,
 		RRelease,
 		MPress,
 		MRelease,

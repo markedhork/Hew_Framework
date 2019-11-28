@@ -12,7 +12,7 @@ public:
 	~Server();
 	bool Set();
 	void Process();
-
+	void Connect();
 private:
 	void ProcessClient();
 	addrinfo hints;

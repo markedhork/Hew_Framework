@@ -7,6 +7,12 @@ void MouseClass::OnLeftPressed(int x, int y)
 	this->eventBuffer.push(me);
 }
 
+void MouseClass::OnLeftDoubleClick(int x, int y)
+{
+	this->leftDoubleClick = true;
+	this->eventBuffer.push(MouseEvent(MouseEvent::EventType::LDoubleClick, x, y));
+}
+
 void MouseClass::OnLeftReleased(int x, int y)
 {
 	this->leftIsDown = false;
@@ -17,6 +23,12 @@ void MouseClass::OnRightPressed(int x, int y)
 {
  	this->RightIsDown = true;
 	this->eventBuffer.push(MouseEvent(MouseEvent::EventType::RPress, x, y));
+}
+
+void MouseClass::OnRightDoubleClick(int x, int y)
+{
+	this->RightDoubleClick = true;
+	this->eventBuffer.push(MouseEvent(MouseEvent::EventType::RDoubleClick, x, y));
 }
 
 void MouseClass::OnRightReleased(int x, int y)
@@ -63,6 +75,19 @@ bool MouseClass::IsLeftDown()
 	return this->leftIsDown;
 }
 
+bool MouseClass::IsLeftDoubleClick()
+{
+	if (this->leftDoubleClick)
+	{
+		this->leftDoubleClick = false;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 bool MouseClass::IsMiddleDown()
 {
 	return this->mbuttonIsDown;
@@ -71,6 +96,19 @@ bool MouseClass::IsMiddleDown()
 bool MouseClass::IsRightDown()
 {
 	return this->RightIsDown;
+}
+
+bool MouseClass::IsRightDoubleClick()
+{
+	if (this->RightDoubleClick)
+	{
+		this->RightDoubleClick = false;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 int MouseClass::GetPosX()

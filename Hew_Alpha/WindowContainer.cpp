@@ -79,6 +79,20 @@ LRESULT WindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 		mouse.OnMouseMove(x, y);
 		return 0;
 	}
+	case WM_LBUTTONDBLCLK:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		mouse.OnLeftDoubleClick(x, y);
+		return 0;
+	}
+	case WM_RBUTTONDBLCLK:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		mouse.OnRightDoubleClick(x, y);
+		return 0;
+	}
 	case WM_LBUTTONDOWN:
 	{
 		int x = LOWORD(lParam);

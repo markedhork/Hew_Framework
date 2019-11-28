@@ -16,6 +16,7 @@ bool Game2::Set()
 
 bool Game2::Update()
 {
+
 	float dt = this->timer->GetMilisecondsElapsed();
 	this->timer->Restart();
 
@@ -35,7 +36,7 @@ bool Game2::Update()
 	}
 
 	//this->gfx.model.AdjustRotation(0.0f, 0.001f*dt, 0.0f);
-
+	   
 	while (!this->mouse->EventBufferIsEmpty())
 	{
 		MouseEvent me = this->mouse->ReadEvent();
@@ -51,28 +52,28 @@ bool Game2::Update()
 	const float cameraSpeed = 0.01f;
 
 
-	if (this->keyboard->KeyIsPressed('W'))
+	//if (this->keyboard->KeyIsPressed(VK_UP))
+	if(this->mouse->IsLeftDoubleClick())
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetForwardVector()*cameraSpeed*dt);
 	}
-	if (this->keyboard->KeyIsPressed('S'))
+	if (this->keyboard->KeyIsPressed(VK_DOWN))
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetBackwardVector()*cameraSpeed*dt);
 	}
-	if (this->keyboard->KeyIsPressed('A'))
+	if (this->keyboard->KeyIsPressed(VK_LEFT))
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetLeftVector()*cameraSpeed*dt);
 	}
-	if (this->keyboard->KeyIsPressed('D'))
+	if (this->keyboard->KeyIsPressed(VK_RIGHT))
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetRightVector()*cameraSpeed*dt);
 	}
 	if (this->keyboard->KeyIsPressed(VK_SPACE))
 	{
 		this->gfx->camera.AdjustPosition(0.0f, cameraSpeed*dt, 0.0f);
-
 	}
-	if (this->keyboard->KeyIsPressed('C'))
+	if (this->keyboard->KeyIsPressed('N'))
 	{
 		this->gfx->camera.AdjustPosition(0.0f, -cameraSpeed * dt, 0.0f);
 	}

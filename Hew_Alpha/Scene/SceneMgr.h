@@ -13,12 +13,13 @@ class SceneMgr
 {
 public:
 	bool Initialize(Graphics* pGfx, KeyboardClass* pKeyboard, 
-		MouseClass* pMouse, Timer *pTimer,Network *network)
+		MouseClass* pMouse, Timer *pTimer,Network *pNetwork)
 	{
 		this->gfx = pGfx;
 		this->keyboard = pKeyboard;
 		this->mouse = pMouse;
 		this->timer = pTimer;
+		this->network = pNetwork;
 		return true;
 	}
 	virtual bool Set() = 0;

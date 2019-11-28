@@ -6,8 +6,10 @@ class MouseClass
 {
 public:
 	void OnLeftPressed(int x, int y);
+	void OnLeftDoubleClick(int x, int y);
 	void OnLeftReleased(int x, int y);
 	void OnRightPressed(int x, int y);
+	void OnRightDoubleClick(int x, int y);
 	void OnRightReleased(int x, int y);
 	void OnMiddlePressed(int x, int y);
 	void OnMiddleReleased(int x, int y);
@@ -17,8 +19,10 @@ public:
 	void OnMouseMoveRaw(int x, int y);
 
 	bool IsLeftDown();
+	bool IsLeftDoubleClick();
 	bool IsMiddleDown();
 	bool IsRightDown();
+	bool IsRightDoubleClick();
 
 	int GetPosX();
 	int GetPosY();
@@ -30,7 +34,9 @@ public:
 private:
 	std::queue<MouseEvent> eventBuffer;
 	bool leftIsDown = false;
+	bool leftDoubleClick = false;
 	bool RightIsDown = false;
+	bool RightDoubleClick = false;
 	bool mbuttonIsDown = false;
 	int x = 0;
 	int y = 0;

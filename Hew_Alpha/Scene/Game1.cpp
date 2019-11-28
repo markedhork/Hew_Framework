@@ -20,7 +20,6 @@ bool Game1::Set()
 
 bool Game1::Update()
 {
-
 	float dt = this->timer->GetMilisecondsElapsed();
 	this->timer->Restart();
 

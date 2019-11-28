@@ -1,24 +1,20 @@
 #pragma once
 #include <WinSock2.h>
-#include <ws2tcpip.h>
+#include <Ws2tcpip.h>
 #include <string>
 #include <thread>
 using namespace std;
 
 #pragma comment (lib, "Ws2_32.lib")
 
-#define DEFAULT_BUFLEN 512            
-#define IP_ADDRESS "10.192.129.188"
+#define DEFAULT_BUFLEN 256            
+#define IP_ADDRESS "192.168.11.2"
 #define DEFAULT_PORT "3504"
 
 struct client_type
 {
-	//============================
-	//Game Param
-	//BYTE rec;
-
-	//============================
 	SOCKET socket;
+	char received_message[DEFAULT_BUFLEN];
 };
 
 class Network
@@ -32,6 +28,7 @@ protected :
 	bool Initialize();
 	bool Uninitialize();
 	WSAData wsa_data;
-	thread target_thread;
+	thread connect_thread;
+	thread process_thread;
 };
 

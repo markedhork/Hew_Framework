@@ -1,4 +1,7 @@
-﻿  Graphics.cpp
+﻿  Engine.cpp
 d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\graphics.cpp(364): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+  main.cpp
+d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
+  Generating Code...
+  Client.cpp
   Hew_Alpha.vcxproj -> D:\HEW\Hew_Alpha - 副本\Debug\Hew_Alpha.exe
