@@ -36,10 +36,11 @@ LRESULT WindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 		}
 		else
 		{
-			const bool wasPressed = lParam & 0x40000000;
+			const bool wasPressed = lParam & (1 << 30);
 			if (!wasPressed)
 			{
 				keyboard.OnKeyPressed(keycode);
+				
 			}
 		}
 		if (wParam == VK_ESCAPE) {
@@ -62,7 +63,7 @@ LRESULT WindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 		}
 		else
 		{
-			const bool wasPressed = lParam & 0x40000000;
+			const bool wasPressed = lParam & (1 << 30);
 			if (!wasPressed)
 			{
 				keyboard.OnChar(ch);

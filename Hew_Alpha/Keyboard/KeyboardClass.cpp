@@ -5,12 +5,25 @@ KeyboardClass::KeyboardClass()
 	for (int i = 0; i < 256; i++)
 	{
 		this->keyStates[i] = false;//Initialize all key states to off(false)
+		this->keyStates_Trigger[i] = false;
 	}
 }
 
 bool KeyboardClass::KeyIsPressed(const unsigned char keycode)
 {
 	return this->keyStates[keycode];
+}
+bool KeyboardClass::KeyIsTrigger(const unsigned char keycode)
+{
+	if (this->keyStates_Trigger[keycode])
+	{
+		this->keyStates_Trigger[keycode] = false;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 bool KeyboardClass::KeyBufferIsEmpty()
 {
@@ -53,6 +66,8 @@ unsigned char KeyboardClass::ReadChar()
 void KeyboardClass::OnKeyPressed(const unsigned char key)
 {
 	this->keyStates[key] = true;
+	this->keyStates_Trigger[key] = true;
+
 	this->keyBuffer.push(KeyboardEvent(KeyboardEvent::EventType::Press, key));
 }
 
@@ -60,6 +75,11 @@ void KeyboardClass::OnKeyReleased(const unsigned char key)
 {
 	this->keyStates[key] = false;
 	this->keyBuffer.push(KeyboardEvent(KeyboardEvent::EventType::Release, key));
+}
+
+void KeyboardClass::TriggerReleased(const unsigned char key)
+{
+	this->keyStates_Trigger[key] = false;
 }
 
 void KeyboardClass::OnChar(const unsigned char key)

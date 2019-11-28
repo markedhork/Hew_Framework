@@ -6,7 +6,7 @@
 #define MAX_BUILD			100
 
 
-static BYTE Build[MAX_BUILD] = {0,1,2,3,3};
+static BYTE Build[MAX_BUILD] = {1,2,3,4,4};
 static BYTE map[MAX_BUILD][MAP_Y][MAP_X] = { 
 	{{1,1,1,1,1},
 	{1,1,1,1,1},

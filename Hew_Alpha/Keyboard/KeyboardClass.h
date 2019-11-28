@@ -7,12 +7,14 @@ class KeyboardClass
 public:
 	KeyboardClass();
 	bool KeyIsPressed(const unsigned char keycode);
+	bool KeyIsTrigger(const unsigned char keycode);
 	bool KeyBufferIsEmpty();
 	bool CharBufferIsEmpty();
 	KeyboardEvent ReadKey();
 	unsigned char ReadChar();
 	void OnKeyPressed(const unsigned char key);
 	void OnKeyReleased(const unsigned char key);
+	void TriggerReleased(const unsigned char key);
 	void OnChar(const unsigned char key);
 	void EnableAutoRepeatKeys();
 	void DisableAutoRepeatKeys();
@@ -24,6 +26,7 @@ private:
 	bool autoRepeatKeys = false;
 	bool autoRepearChars = false;
 	bool keyStates[256];
+	bool keyStates_Trigger[256];
 	std::queue<KeyboardEvent> keyBuffer;
 	std::queue<unsigned char> charBuffer;
 };

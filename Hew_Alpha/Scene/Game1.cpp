@@ -55,39 +55,90 @@ bool Game1::Update()
 
 	const float cameraSpeed = 0.01f;
 
-	if (this->keyboard->KeyIsPressed('Q'))
+	if (this->keyboard->KeyIsTrigger('Q'))
 	{
 		this->player.PX--;
 		this->player.PY++;
+		if (this->player.PY >= 0 && this->player.PX >= 0 && this->player.PX < MAP_X
+			&& Build[this->player.PY / MAP_Y] > 0
+			&& map[Build[this->player.PY / MAP_Y] - 1][this->player.PY % MAP_Y][this->player.PX] == 1)
+		{
+			PLAYER_STATE.pos.x--;
+			PLAYER_STATE.pos.y++;
+		}
+		else
+		{
+			this->player.PX++;
+			this->player.PY--;
+		}
 	}
-	else if (this->keyboard->KeyIsPressed('W'))
+	else if (this->keyboard->KeyIsTrigger('W'))
 	{
 		this->player.PY++;
+		if (this->player.PY >= 0 && this->player.PX >= 0 && this->player.PX < MAP_X
+			&& Build[this->player.PY / MAP_Y] > 0
+			&& map[Build[this->player.PY / MAP_Y] - 1][this->player.PY % MAP_Y][this->player.PX] == 1)
+		{
+			PLAYER_STATE.pos.y++;
+		}
+		else
+		{
+			this->player.PY--;
+		}
 	}
-	else if (this->keyboard->KeyIsPressed('E'))
+	else if (this->keyboard->KeyIsTrigger('E'))
 	{
 		this->player.PX++;
 		this->player.PY++;
+		if (this->player.PY >= 0 && this->player.PX >= 0 && this->player.PX < MAP_X
+			&& Build[this->player.PY / MAP_Y] > 0
+			&& map[Build[this->player.PY / MAP_Y] - 1][this->player.PY % MAP_Y][this->player.PX] == 1)
+		{
+			PLAYER_STATE.pos.x++;
+			PLAYER_STATE.pos.y++;
+		}
+		else
+		{
+			this->player.PX--;
+			this->player.PY--;
+		}
 	}
-	else if (this->keyboard->KeyIsPressed('A'))
+	else if (this->keyboard->KeyIsTrigger('A'))
 	{
 		this->player.PX--;
+		if (this->player.PY >= 0 && this->player.PX >= 0 && this->player.PX < MAP_X
+			&& Build[this->player.PY / MAP_Y] > 0
+			&& map[Build[this->player.PY / MAP_Y] - 1][this->player.PY % MAP_Y][this->player.PX] == 1)
+		{
+			PLAYER_STATE.pos.x--;
+		}
+		else
+		{
+			this->player.PX++;
+		}
 	}
-	else if (this->keyboard->KeyIsPressed('D'))
+	else if (this->keyboard->KeyIsTrigger('D'))
 	{
 		this->player.PX++;
-
+		if (this->player.PY >= 0 && this->player.PX >= 0 && this->player.PX < MAP_X
+			&& Build[this->player.PY / MAP_Y] > 0
+			&& map[Build[this->player.PY / MAP_Y] - 1][this->player.PY % MAP_Y][this->player.PX] == 1)
+		{
+			PLAYER_STATE.pos.x++;
+		}
+		else
+		{
+			this->player.PX--;
+		}
 	}
-	else if (this->keyboard->KeyIsPressed('Z'))
+	else if (this->keyboard->KeyIsTrigger('Z'))
 	{
 		this->player.PX--;
 		this->player.PY--;
-		if (this->player.PY >= 0 && this->player.PX >= 0 && this->player.PX < MAP_X)
+		if (this->player.PY >= 0 && this->player.PX >= 0 && this->player.PX < MAP_X
+			&& Build[this->player.PY / MAP_Y] > 0
+			&& map[Build[this->player.PY / MAP_Y] - 1][this->player.PY % MAP_Y][this->player.PX] == 1)
 		{
-			if (Build[this->player.PY / MAP_Y])
-			{
-
-			}
 			PLAYER_STATE.pos.x--;
 			PLAYER_STATE.pos.y--;
 		}
@@ -96,16 +147,37 @@ bool Game1::Update()
 			this->player.PX++;
 			this->player.PY++;
 		}
-		
 	}
-	else if (this->keyboard->KeyIsPressed('X'))
+	else if (this->keyboard->KeyIsTrigger('X'))
 	{
 		this->player.PY--;
+		if (this->player.PY >= 0 && this->player.PX >= 0 && this->player.PX < MAP_X
+			&& Build[this->player.PY / MAP_Y] > 0
+			&& map[Build[this->player.PY / MAP_Y] - 1][this->player.PY % MAP_Y][this->player.PX] == 1)
+		{
+			PLAYER_STATE.pos.y--;
+		}
+		else
+		{
+			this->player.PY++;
+		}
 	}
-	else if (this->keyboard->KeyIsPressed('C'))
+	else if (this->keyboard->KeyIsTrigger('C'))
 	{
 		this->player.PX++;
 		this->player.PY--;
+		if (this->player.PY >= 0 && this->player.PX >= 0 && this->player.PX < MAP_X
+			&& Build[this->player.PY / MAP_Y] > 0
+			&& map[Build[this->player.PY / MAP_Y] - 1][this->player.PY % MAP_Y][this->player.PX] == 1)
+		{
+			PLAYER_STATE.pos.x++;
+			PLAYER_STATE.pos.y--;
+		}
+		else
+		{
+			this->player.PX--;
+			this->player.PY++;
+		}
 	}
 
 	if (this->keyboard->KeyIsPressed(VK_UP))

@@ -350,11 +350,11 @@ void Graphics::DrawWall()
 	for (int i = 0; i < MAX_BUILD; i++)
 	{
 		int mapType = Build[i];
-		if (mapType >= TOTAL_MAP_STYLE || mapType < 0)
+		if (mapType > TOTAL_MAP_STYLE || mapType <= 0)
 		{
 			break;
 		}
-
+		mapType--;
 		for (int y = 0; y < MAP_Y; y++)
 		{
 			for (int x = 0; x < MAP_X; x++)
