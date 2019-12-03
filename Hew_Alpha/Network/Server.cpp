@@ -12,7 +12,7 @@ Server::~Server()
 
 	//Close client socket
 	process_thread.detach();
-	closesocket(client.socket);
+	closesocket(client.socket);	
 }
 
 bool Server::Set()
@@ -30,7 +30,7 @@ bool Server::Set()
 	iResult = getaddrinfo(static_cast<LPCTSTR>(IP_ADDRESS), DEFAULT_PORT, &hints, &server);
 	if (iResult)
 	{
-		string outmsg = "";
+		std::string outmsg = "";
 		outmsg += "getaddrinfo() Failed Error: ";
 		outmsg += iResult;
 		outmsg += "\n";
@@ -54,10 +54,10 @@ bool Server::Set()
 
 	//Assign an address to the server socket.
 	OutputDebugStringA("Binding socket...\n");
-	iResult = bind(server_socket,(const sockaddr *)server->ai_addr, (int)server->ai_addrlen);
+	iResult = bind(server_socket, (const sockaddr *)server->ai_addr, (int)server->ai_addrlen);
 	if (iResult)
 	{
-		string outmsg = "";
+		std::string outmsg = "";
 		outmsg += "Bind() Failed Error: ";
 		outmsg += iResult;
 		outmsg += "\n";
@@ -73,7 +73,7 @@ bool Server::Set()
 	iResult = listen(server_socket, SOMAXCONN);
 	if (iResult)
 	{
-		string outmsg = "";
+		std::string outmsg = "";
 		outmsg += "Listen() Failed Error: ";
 		outmsg += iResult;
 		outmsg += "\n";
@@ -93,13 +93,12 @@ bool Server::Set()
 
 void Server::Process()
 {
-	this->connect_thread = thread(&Server::Connect, this);
-	this->process_thread = thread(&Server::ProcessClient, this);
+	this->connect_thread = std::thread(&Server::Connect, this);
 }
 
 void Server::Connect()
 {
-	OutputDebugStringA("Server::Connect()\n");
+	OutputDebugStringA("Server Waiting for Connection...\n");
 	while (1)
 	{
 		SOCKET incoming = INVALID_SOCKET;
@@ -107,24 +106,61 @@ void Server::Connect()
 		if (incoming == INVALID_SOCKET)
 		{
 			int error = WSAGetLastError();
-			string outmsg = "";
+			std::string outmsg = "";
 			outmsg += "accept() Failed Error: ";
 			outmsg += error;
 			outmsg += "\n";
 			OutputDebugStringA(outmsg.c_str());
 			continue;
 		}
+		else
+		{
+			OutputDebugStringA("Client connected!!!\n");
+
+		}
 		client.socket = incoming;
 		if (client.socket != INVALID_SOCKET)
 			break;
 	}
+	connect_thread.detach();
+	this->process_thread = std::thread(&Server::ProcessClient, this);
+}
 
+void Server::Send(int *p)
+{
+	std::string sendMsg = "";
+	sendMsg += std::to_string(p[0]);
+	sendMsg += " ";
+	sendMsg += std::to_string(p[1]);
+	this->new_msg = sendMsg;
+
+	OutputDebugStringA(new_msg.c_str());
+	OutputDebugStringA("\n");
+
+	//send message from client
+	if (this->msg != this->new_msg)
+	{
+		OutputDebugStringA("new msg to send\n");
+		this->msg = this->new_msg;
+		//Send message to client
+		if (client.socket != INVALID_SOCKET)
+		{
+			int iResult = send(client.socket, msg.c_str(), strlen(msg.c_str()), 0);
+			if (iResult == 0)
+			{
+				OutputDebugStringA("Failed to send msg to client\n");
+			}
+			else
+			{
+				OutputDebugStringA("msg send to client\n");
+			}
+		}
+	}
 }
 
 void Server::ProcessClient()
 {
-	this->connect_thread.join();
-	std::string msg = "";
+	OutputDebugStringA("Server Begin to process...\n");
 
 	//Session
 	while (1)
@@ -133,6 +169,7 @@ void Server::ProcessClient()
 
 		if (client.socket != 0)
 		{
+			//recive message from client
 			int iResult = recv(client.socket, client.received_message, DEFAULT_BUFLEN, 0);
 
 			if (iResult != SOCKET_ERROR)
@@ -140,24 +177,20 @@ void Server::ProcessClient()
 				if (strcmp("", client.received_message))
 					strcat_s(client.received_message, "\n");
 				OutputDebugStringA(client.received_message);
-
-				//Send message to client
-				if (client.socket != INVALID_SOCKET)
-					iResult = send(client.socket, msg.c_str(), strlen(msg.c_str()), 0);
-
 			}
 			else
 			{
-				msg = "Client Disconnected\n";
-				OutputDebugStringA(msg.c_str());
+				std::string Outmsg = "Client Disconnected\n";
+				OutputDebugStringA(Outmsg.c_str());
 
 				closesocket(client.socket);
 				client.socket = INVALID_SOCKET;
 				break;
 			}
+
 		}
 	} //end while
-
+	OutputDebugStringA("process_thread.detach\n");
 	process_thread.detach();
 }
 

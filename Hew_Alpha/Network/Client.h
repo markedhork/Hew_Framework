@@ -10,12 +10,13 @@ public:
 	bool Set();
 	void Process();
 	void Connect();
-	void Send();
+	void Send(int *p);
 private:
 	void ProcessClient();
-	addrinfo *result = NULL, hints ,*ptr;
+	addrinfo *result = NULL, hints, *ptr;
 	std::string sent_message = "";
-	client_type client = { INVALID_SOCKET };
+	client_type server = { INVALID_SOCKET };
 	std::string message;
+	bool newMsg = false;
 };
 

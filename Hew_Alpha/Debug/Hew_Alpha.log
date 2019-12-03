@@ -1,7 +1,2 @@
-﻿  Engine.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-  main.cpp
-d:\hew\hew_alpha - 副本\hew_alpha\graphics\texture.h(29): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
-  Generating Code...
-  Client.cpp
-  Hew_Alpha.vcxproj -> D:\HEW\Hew_Alpha - 副本\Debug\Hew_Alpha.exe
+﻿  Server.cpp
+  Hew_Alpha.vcxproj -> D:\HEW\Hew_Alpha_withNetwork\Debug\Hew_Alpha.exe

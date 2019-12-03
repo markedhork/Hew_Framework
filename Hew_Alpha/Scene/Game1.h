@@ -11,5 +11,6 @@ public:
 	bool Draw();
 private:
 	PLAYER player;
+	PLAYER recPlayer;
 };
 

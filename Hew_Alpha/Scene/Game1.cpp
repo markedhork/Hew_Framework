@@ -23,6 +23,9 @@ bool Game1::Update()
 	float dt = this->timer->GetMilisecondsElapsed();
 	this->timer->Restart();
 
+	this->recPlayer.PX = this->player.PX;
+	this->recPlayer.PY = this->player.PY;
+
 	while (!this->keyboard->CharBufferIsEmpty())
 	{
 		unsigned char ch = this->keyboard->ReadChar();
@@ -177,6 +180,12 @@ bool Game1::Update()
 			this->player.PX--;
 			this->player.PY++;
 		}
+	}
+	
+	if (this->player.PX != recPlayer.PX || player.PY != recPlayer.PY)
+	{
+		int pos[] = { player.PX ,player.PY };
+		this->network->Send(pos);
 	}
 
 	if (this->keyboard->KeyIsPressed(VK_UP))
