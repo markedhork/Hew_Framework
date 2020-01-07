@@ -3,6 +3,7 @@
 Client::Client()
 {
 	this->Set();
+	this->type = CLIENT_TYPE;
 }
 
 Client::~Client()
@@ -11,7 +12,8 @@ Client::~Client()
 	if (iResult == SOCKET_ERROR) {
 		OutputDebugStringA("shutdown() failed with error\n");
 	}
-	process_thread.detach();
+	this->process_thread.detach();
+	this->connect_thread.detach();
 	closesocket(server.socket);
 
 }
@@ -74,7 +76,6 @@ void Client::Connect()
 	{
 		OutputDebugStringA("Successfully Connected\n");
 	}
-	connect_thread.detach();
 	this->process_thread = std::thread(&Client::ProcessClient, this);
 }
 
@@ -97,6 +98,8 @@ void Client::Send(int *p)
 
 void Client::ProcessClient()
 {
+	this->Successed = true;
+
 	while (1)
 	{
 		memset(server.received_message, 0, DEFAULT_BUFLEN);
@@ -126,9 +129,10 @@ void Client::ProcessClient()
 	}
 
 	if (WSAGetLastError() == WSAECONNRESET)
+	{
 		OutputDebugStringA("The server has disconnected\n");
-
-	process_thread.detach();
+		this->Successed = false;
+	}
 }
 
 

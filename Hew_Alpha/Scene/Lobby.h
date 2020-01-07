@@ -7,7 +7,9 @@ class Lobby :
 {
 public:
 	bool Set();
-	bool Update();
+	int Update();
 	bool Draw();
+
+private:
 };
 

@@ -18,6 +18,14 @@ struct Sprite
 {
 	D3DXVECTOR3 pos;
 	D3DXVECTOR3 rot;
+	D3DXVECTOR2 size;
+	int index;
+};
+
+struct Mesh
+{
+	D3DXVECTOR3 pos;
+	D3DXVECTOR3 rot;
 	D3DXVECTOR3 size;
 	int index;
 };

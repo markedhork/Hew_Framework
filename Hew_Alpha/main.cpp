@@ -13,7 +13,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	Engine engine;
-	if (engine.Initialize(hInstance, "ClimbFantacy", "MyWindowClass", 1600, 800))
+	if (engine.Initialize(hInstance, "ClimbFantacy", "MyWindowClass", WINDOW_WIDTH, WINDOW_HEIGHT))
 	{
 		while (engine.ProcessMessages() == true)
 		{

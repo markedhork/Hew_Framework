@@ -3,6 +3,7 @@
 Server::Server()
 {
 	this->Set();
+	this->type = SERVER_TYPE;
 }
 
 Server::~Server()
@@ -122,7 +123,7 @@ void Server::Connect()
 		if (client.socket != INVALID_SOCKET)
 			break;
 	}
-	connect_thread.detach();
+	//connect_thread.detach();
 	this->process_thread = std::thread(&Server::ProcessClient, this);
 }
 
@@ -161,7 +162,7 @@ void Server::Send(int *p)
 void Server::ProcessClient()
 {
 	OutputDebugStringA("Server Begin to process...\n");
-
+	this->Successed = true;
 	//Session
 	while (1)
 	{

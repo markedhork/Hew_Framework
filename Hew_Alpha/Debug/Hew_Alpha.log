@@ -1,2 +1,3 @@
-﻿  Server.cpp
+﻿  Lobby.cpp
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\texture.h(39): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
   Hew_Alpha.vcxproj -> D:\HEW\Hew_Alpha_withNetwork\Debug\Hew_Alpha.exe

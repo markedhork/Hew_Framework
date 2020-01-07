@@ -8,7 +8,14 @@ struct PLAYER
 {
 	int PX, PY;
 };
-
+enum SC_NUM
+{
+	TITLE_NUM,
+	LOBBY1_NUM,
+	LOBBY2_NUM,
+	GAME1_NUM,
+	GAME2_NUM,
+};
 class SceneMgr
 {
 public:
@@ -23,7 +30,7 @@ public:
 		return true;
 	}
 	virtual bool Set() = 0;
-	virtual bool Update() = 0;
+	virtual int Update() = 0;
 	virtual bool Draw() = 0;
 protected:
 	Graphics* gfx;

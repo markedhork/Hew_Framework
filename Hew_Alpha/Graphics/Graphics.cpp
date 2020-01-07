@@ -31,6 +31,11 @@ void Graphics::Set(Sprite* sprite, int total)
 	this->InitializeVB();
 }
 
+LPDIRECT3DDEVICE9 Graphics::GetDevice()
+{
+	return pD3DDevice;
+}
+
 
 void Graphics::RenderFrame()
 {
@@ -44,8 +49,21 @@ void Graphics::RenderFrame()
 	this->pD3DDevice->SetTransform(D3DTS_PROJECTION, &this->camera.GetProjectionMatrix());
 
 	this->DrawWall();
-	this->Draw();
+	//this->Draw();
 
+	this->pD3Dspt->Begin(D3DXSPRITE_ALPHABLEND);    // begin sprite drawing
+
+
+	this->DrawUI();
+
+
+	this->pD3Dspt->End();    // end sprite drawing
+
+
+}
+
+void Graphics::RenderFrame_end()
+{
 	// 描画バッチ命令の終了
 	this->pD3DDevice->EndScene();
 	//Render Draw Data
@@ -84,7 +102,6 @@ bool Graphics::InitializeDirectX(HWND hwnd)
 		// デバイスの作成に失敗
 		MessageBox(hwnd, "Direct3Dデバイスの作成に失敗しました", "エラー", MB_OK);
 		OutputDebugStringA("failed to create Direct3D device \n");
-
 		return false;
 	}
 
@@ -102,6 +119,9 @@ bool Graphics::InitializeDirectX(HWND hwnd)
 
 	// 頂点カラーとテクスチャのブレンド設定
 	pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+
+	// Direct3D Spriteの取得
+	D3DXCreateSprite(pD3DDevice, &pD3Dspt);
 
 	return true;
 }
@@ -129,7 +149,6 @@ bool Graphics::UninitializeDirectX(HWND hwnd)
 
 //================================================================
 //ここを追加　3Dポリゴン用頂点の準備
-
 bool Graphics::InitializeVB()
 {
 	this->pD3DDevice->CreateVertexBuffer(
@@ -392,7 +411,7 @@ void Graphics::DrawWall()
 					break;
 				}
 				this->pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-				this->pD3DDevice->SetTexture(0, this->textureController.GetTexture(TEXTURE_INDEX_KIZUNA));
+				this->pD3DDevice->SetTexture(0, this->textureController.GetTexture(TEXTURE_INDEX_WALL));
 				this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
 				this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 4, 2);
 				this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 8, 2);
@@ -404,6 +423,8 @@ void Graphics::DrawWall()
 	}
 }
 
+
+
 void Graphics::Draw()
 {
 	for (int index = 0; index < totalSprites; index++)
@@ -414,8 +435,12 @@ void Graphics::Draw()
 
 		D3DXMatrixIdentity(&mtxWorld);	//ワールド行列の単位行列の初期化
 		//スケール行列を作成＆ワールド行列へ合成
-		D3DXMatrixScaling(&mtxScl, this->pSprite[index].size.x, this->pSprite[index].size.y, this->pSprite[index].size.z);
+		D3DXMatrixScaling(&mtxScl, this->pSprite[index].size.x, this->pSprite[index].size.y, 1);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxScl);	//World*Scaling
+
+		//D3DXMatrixScaling(&mtxScl, this->textureController.GetWidth((TextureIndex)this->pSprite[index].index)/ WINDOW_WIDTH, this->textureController.GetHeight((TextureIndex)this->pSprite[index].index)/ WINDOW_HEIGHT, this->pSprite[index].size.z);
+		//D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxScl);	//World*Scaling
+
 		//回転行列を作成＆ワールド行列への合成
 		D3DXMatrixRotationYawPitchRoll(&mtxRot, this->pSprite[index].rot.y, this->pSprite[index].rot.x, this->pSprite[index].rot.z);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);	//World*Rotation
@@ -431,5 +456,34 @@ void Graphics::Draw()
 		this->pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 		this->pD3DDevice->SetTexture(0, this->textureController.GetTexture((TextureIndex)this->pSprite[index].index));
 		this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
+	}
+}
+
+void Graphics::DrawUI()
+{
+	for (int index = 0; index < totalSprites; index++)
+	{
+		D3DXVECTOR3 center(0, 0, 0.0f);    // center at the upper-left corner
+		D3DXVECTOR3 position(this->pSprite[index].pos.x, this->pSprite[index].pos.y, this->pSprite[index].pos.z);    // position at 50, 50 with no depth
+
+		D3DXMATRIX mtxScl;					//スケーリング行列
+		D3DXMATRIX mtxRot;					//回転行列
+		D3DXMATRIX mtxTrs;					//平行移動行列
+
+		D3DXMatrixIdentity(&mtxWorld);	//ワールド行列の単位行列の初期化
+		//スケール行列を作成＆ワールド行列へ合成
+		D3DXMatrixScaling(&mtxScl, this->pSprite[index].size.x, this->pSprite[index].size.y, 1);
+		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxScl);	//World*Scaling
+
+		//回転行列を作成＆ワールド行列への合成
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, this->pSprite[index].rot.y, this->pSprite[index].rot.x, this->pSprite[index].rot.z);
+		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);	//World*Rotation
+
+		this->pD3Dspt->SetTransform(&mtxWorld);
+
+		this->pD3Dspt->Draw(this->textureController.GetTexture((TextureIndex)this->pSprite[index].index), NULL,
+			&center, &position, D3DCOLOR_ARGB(255, 255, 255, 255));  // draw it!
+
+
 	}
 }

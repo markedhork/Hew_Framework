@@ -1,6 +1,6 @@
 #include "Game2.h"
 Sprite Game2_sprite[] = {
-	{D3DXVECTOR3(0,0,-0.2),D3DXVECTOR3(0,0,0),D3DXVECTOR3(1,1,1),1},
+	{D3DXVECTOR3(0,0,-0.2),D3DXVECTOR3(0,0,0),D3DXVECTOR2(1,1),TEXTURE_INDEX_KIZUNA},
 	//{D3DXVECTOR3(0,0,5),D3DXVECTOR3(0,0,0),D3DXVECTOR3(10,10,1),1}
 };
 
@@ -14,7 +14,7 @@ bool Game2::Set()
 	return true;
 }
 
-bool Game2::Update()
+int Game2::Update()
 {
 
 	float dt = this->timer->GetMilisecondsElapsed();
@@ -36,7 +36,7 @@ bool Game2::Update()
 	}
 
 	//this->gfx.model.AdjustRotation(0.0f, 0.001f*dt, 0.0f);
-	   
+
 	while (!this->mouse->EventBufferIsEmpty())
 	{
 		MouseEvent me = this->mouse->ReadEvent();
@@ -47,13 +47,17 @@ bool Game2::Update()
 				this->gfx->camera.AdjustRotation((float)me.GetPosX()*0.01f, (float)me.GetPosY()*0.01f, 0.0f);
 			}
 		}
+		if (this->mouse->IsLeftDown() && this->CheckClickInZone())
+		{
+
+		}
 	}
 
 	const float cameraSpeed = 0.01f;
 
 
 	//if (this->keyboard->KeyIsPressed(VK_UP))
-	if(this->mouse->IsLeftDoubleClick())
+	if (this->mouse->IsLeftDoubleClick())
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetForwardVector()*cameraSpeed*dt);
 	}
@@ -78,13 +82,30 @@ bool Game2::Update()
 		this->gfx->camera.AdjustPosition(0.0f, -cameraSpeed * dt, 0.0f);
 	}
 
-	return true;
+	return GAME2_NUM;
 }
 
 bool Game2::Draw()
 {
 	this->gfx->RenderFrame();
 
+
+	this->gfx->RenderFrame_end();
+
 	return true;
+}
+
+bool Game2::CheckClickInZone()
+{
+	float len = sqrtf((this->mouse->GetPosX() - CLICK_ZONE_POS_X)*(this->mouse->GetPosX() - CLICK_ZONE_POS_X) + (this->mouse->GetPosY() - CLICK_ZONE_POS_Y)*(this->mouse->GetPosY() - CLICK_ZONE_POS_Y));
+	if (len <= CLICK_ZONE_POS_RADIUS)
+	{
+		//Click
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 

@@ -7,10 +7,11 @@ class Game1 :
 {
 public:
 	bool Set();
-	bool Update();
+	int Update();
 	bool Draw();
 private:
 	PLAYER player;
 	PLAYER recPlayer;
+
 };
 

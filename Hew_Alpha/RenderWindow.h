@@ -1,6 +1,10 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+
+#define WINDOW_WIDTH	(1600)
+#define WINDOW_HEIGHT	(900)
+
 class WindowContainer;
 
 class RenderWindow

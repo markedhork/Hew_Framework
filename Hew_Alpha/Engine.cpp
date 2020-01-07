@@ -2,7 +2,7 @@
 
 bool Engine::Initialize(HINSTANCE hInstance, std::string window_title, std::string window_class, int width, int height)
 {
-	this->DisableCursor();
+	//this->DisableCursor();
 	timer.Start();
 	if (!this->render_window.Initialize(this, hInstance, window_title, window_class, width, height))
 	{
@@ -13,7 +13,7 @@ bool Engine::Initialize(HINSTANCE hInstance, std::string window_title, std::stri
 		return false;
 	}
 
-	this->Set(2);
+	this->Set(TITLE_NUM);
 	return true;
 }
 
@@ -21,19 +21,23 @@ void Engine::Set(int index)
 {
 	switch (index)
 	{
-	case 0:			//Title
+	case TITLE_NUM:			//Title
 		pScene = new Title;
 		break;
-	case 1:			//Lobby
+	case LOBBY1_NUM:			//Lobby
 		pScene = new Lobby;
-		break;
-	case 2:			//Game1
-		pScene = new Game1;
 		this->network = new Server;
+
 		break;
-	case 3:			//Game2
-		pScene = new Game2;
+	case LOBBY2_NUM:			//Lobby
+		pScene = new Lobby;
 		this->network = new Client;
+		break;
+	case GAME1_NUM:			//Game1
+		pScene = new Game1;
+		break;
+	case GAME2_NUM:			//Game2
+		pScene = new Game2;
 		break;
 	default:
 		break;
@@ -41,17 +45,21 @@ void Engine::Set(int index)
 
 	pScene->Initialize(&this->gfx, &this->keyboard, &this->mouse, &this->timer, this->network);
 	pScene->Set();
+	this->oldScene = index;
 }
 
 bool Engine::ProcessMessages()
 {
-
 	return this->render_window.ProcessMessages();
 }
 
 void Engine::Update()
 {
-	pScene->Update();
+	this->newScene = pScene->Update();
+	if (this->newScene != this->oldScene)
+	{
+		this->Set(this->newScene);
+	}
 }
 
 void Engine::RenderFrame()

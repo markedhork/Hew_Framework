@@ -6,10 +6,22 @@ void Texture::Load(HWND hwnd, LPDIRECT3DDEVICE9 pDevice)
 
 	for (int i = 0; i < TEXTURE_FILE_COUNT; i++) {
 
-		if (FAILED(D3DXCreateTextureFromFile(this->pD3DDevice, g_TextureFiles[i].filename, &pTextures[i]))) {
+		if (FAILED(D3DXCreateTextureFromFileEx
+		(this->pD3DDevice, g_TextureFiles[i].filename,
+			g_TextureFiles[i].width,    // default width
+			g_TextureFiles[i].height,    // default height
+			D3DX_DEFAULT,    // no mip mapping
+			NULL,    // regular usage
+			D3DFMT_A8R8G8B8,    // 32-bit pixels with alpha
+			D3DPOOL_MANAGED,    // typical memory handling
+			D3DX_DEFAULT,    // no filtering
+			D3DX_DEFAULT,    // no mip filtering
+			D3DCOLOR_XRGB(255, 0, 255),    // the hot-pink color key
+			NULL,    // no image info struct
+			NULL,    // not using 256 colors
+			&pTextures[i]))) {
 			MessageBox(hwnd, "テクスチャの読み取りが失敗しました", "エラー", MB_OK);
 			OutputDebugStringA("failed to read texture \n");
-
 		}
 	}
 }

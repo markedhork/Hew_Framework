@@ -2,7 +2,7 @@
 
 // position.xyz , rotation.xyz , size.xyz , TextureIndex number
 Sprite Game1_sprite[] = {
-	{D3DXVECTOR3(0,0,-0.2),D3DXVECTOR3(0,0,0),D3DXVECTOR3(1,1,1),0},
+	{D3DXVECTOR3(0,0,-0.2),D3DXVECTOR3(0,0,0),D3DXVECTOR2(1,1),TEXTURE_INDEX_AIRO},
 	//{D3DXVECTOR3(0,0,5),D3DXVECTOR3(0,0,0),D3DXVECTOR3(10,10,1),1}
 };
 
@@ -12,13 +12,14 @@ static const int SPRITE_COUNT_G1 = sizeof(Game1_sprite) / sizeof(Game1_sprite[0]
 bool Game1::Set()
 {
 	this->gfx->Set(Game1_sprite, SPRITE_COUNT_G1);
-	this->gfx->camera.SetPosition(0, 1.1f, -5.0f);
+	this->gfx->camera.SetPosition(0, 0, -5.0f);
+	this->gfx->camera.SetRotation(0, 0, 0);
 	this->player.PX = 2;
 	this->player.PY = 0;
 	return true;
 }
 
-bool Game1::Update()
+int Game1::Update()
 {
 	float dt = this->timer->GetMilisecondsElapsed();
 	this->timer->Restart();
@@ -73,6 +74,7 @@ bool Game1::Update()
 			this->player.PX++;
 			this->player.PY--;
 		}
+		this->gfx->camera.SetPosition(PLAYER_STATE.pos.x, PLAYER_STATE.pos.y, -5.0f);
 	}
 	else if (this->keyboard->KeyIsTrigger('W'))
 	{
@@ -87,6 +89,8 @@ bool Game1::Update()
 		{
 			this->player.PY--;
 		}
+		this->gfx->camera.SetPosition(PLAYER_STATE.pos.x, PLAYER_STATE.pos.y, -5.0f);
+
 	}
 	else if (this->keyboard->KeyIsTrigger('E'))
 	{
@@ -104,6 +108,8 @@ bool Game1::Update()
 			this->player.PX--;
 			this->player.PY--;
 		}
+		this->gfx->camera.SetPosition(PLAYER_STATE.pos.x, PLAYER_STATE.pos.y, -5.0f);
+
 	}
 	else if (this->keyboard->KeyIsTrigger('A'))
 	{
@@ -118,6 +124,8 @@ bool Game1::Update()
 		{
 			this->player.PX++;
 		}
+		this->gfx->camera.SetPosition(PLAYER_STATE.pos.x, PLAYER_STATE.pos.y, -5.0f);
+
 	}
 	else if (this->keyboard->KeyIsTrigger('D'))
 	{
@@ -132,6 +140,8 @@ bool Game1::Update()
 		{
 			this->player.PX--;
 		}
+		this->gfx->camera.SetPosition(PLAYER_STATE.pos.x, PLAYER_STATE.pos.y, -5.0f);
+
 	}
 	else if (this->keyboard->KeyIsTrigger('Z'))
 	{
@@ -149,6 +159,8 @@ bool Game1::Update()
 			this->player.PX++;
 			this->player.PY++;
 		}
+		this->gfx->camera.SetPosition(PLAYER_STATE.pos.x, PLAYER_STATE.pos.y, -5.0f);
+
 	}
 	else if (this->keyboard->KeyIsTrigger('X'))
 	{
@@ -163,6 +175,8 @@ bool Game1::Update()
 		{
 			this->player.PY++;
 		}
+		this->gfx->camera.SetPosition(PLAYER_STATE.pos.x, PLAYER_STATE.pos.y, -5.0f);
+
 	}
 	else if (this->keyboard->KeyIsTrigger('C'))
 	{
@@ -180,6 +194,8 @@ bool Game1::Update()
 			this->player.PX--;
 			this->player.PY++;
 		}
+		this->gfx->camera.SetPosition(PLAYER_STATE.pos.x, PLAYER_STATE.pos.y, -5.0f);
+
 	}
 	
 	if (this->player.PX != recPlayer.PX || player.PY != recPlayer.PY)
@@ -213,12 +229,15 @@ bool Game1::Update()
 		this->gfx->camera.AdjustPosition(0.0f, -cameraSpeed * dt, 0.0f);
 	}
 
-	return true;
+	return GAME1_NUM;
 }
 
 bool Game1::Draw()
 {
 	this->gfx->RenderFrame();
+
+
+	this->gfx->RenderFrame_end();
 
 	return true;
 }

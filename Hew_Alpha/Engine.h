@@ -23,4 +23,6 @@ private:
 	Timer			timer;
 	Network*		network;
 	SceneMgr*		pScene;
+	int oldScene;
+	int newScene;
 };

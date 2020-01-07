@@ -18,6 +18,16 @@ bool Network::Uninitialize()
 	return true;
 }
 
+int Network::GetType()
+{
+	return this->type;
+}
+
+bool Network::IfConected()
+{
+	return this->Successed;
+}
+
 bool Network::Initialize()
 {
 	// Initialize Winsock

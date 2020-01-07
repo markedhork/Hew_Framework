@@ -8,13 +8,19 @@
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_BUFLEN 256            
-#define IP_ADDRESS "10.205.102.38"
+#define IP_ADDRESS "192.168.11.2"
 #define DEFAULT_PORT "3504"
 
 struct client_type
 {
 	SOCKET socket;
 	char received_message[DEFAULT_BUFLEN];
+};
+
+enum NET_TYPE
+{
+	SERVER_TYPE,
+	CLIENT_TYPE,
 };
 
 class Network
@@ -25,6 +31,8 @@ public:
 	virtual bool Set() = 0;
 	virtual void Process() = 0;
 	virtual void Send(int *p) = 0;
+	int GetType();
+	bool IfConected();
 protected:
 	bool Initialize();
 	bool Uninitialize();
@@ -32,5 +40,7 @@ protected:
 	std::thread connect_thread;
 	std::thread process_thread;
 	std::thread receive_thread;
+	int type;
+	bool Successed = false;
 };
 
