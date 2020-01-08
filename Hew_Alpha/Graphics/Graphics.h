@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include <string>
 #include "Texture.h"
+#include "MeshClass.h"
 #include "Map.h"
 
 class Graphics
@@ -18,16 +19,19 @@ public:
 	bool Initialize(HWND hwnd, int width, int height);
 	void RenderFrame();
 	void RenderFrame_end();
-	void Set(Sprite* sprite, int total);
+	void Set(Sprite* sprite, int totalSprite, Mesh * mesh, int meshTotal);
 	LPDIRECT3DDEVICE9 GetDevice();
 	Camera camera;
 private:
 	bool InitializeDirectX(HWND hwnd);
 	bool UninitializeDirectX(HWND hwnd);
+	void Init_light();
 	bool InitializeVB();
+
 	void Draw();
 	void DrawUI();
 	void DrawWall();
+
 
 
 	LPDIRECT3DDEVICE9	pD3DDevice;
@@ -35,13 +39,14 @@ private:
 	LPD3DXSPRITE		pD3Dspt;
 
 	Texture				textureController;
+	MeshClass			meshController;
 
 	int					windowWidth = 0;
 	int					windowHeight = 0;
 	Timer				fpsTimer;
 
-	int *				pSpritesIndex;
 	int					totalSprites;
+	int					totalMesh;
 	Sprite *			pSprite;
 	Mesh *				pMesh;
 

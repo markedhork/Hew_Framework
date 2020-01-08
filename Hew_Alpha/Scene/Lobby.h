@@ -11,5 +11,9 @@ public:
 	bool Draw();
 
 private:
+
+	LPD3DXFONT			pDXfont;    // the pointer to the font object
+	int					CountDown = 5;
+	bool				RdyToGo = false;
 };
 

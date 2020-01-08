@@ -12,22 +12,22 @@ bool Graphics::Initialize(HWND hwnd, int width, int height)
 	}
 
 	this->textureController.Load(hwnd, this->pD3DDevice);
+	this->meshController.CreateMeshBuffer(hwnd, this->pD3DDevice);
 
 	this->camera.SetProjectionValues((float)this->windowWidth / (float)this->windowHeight);
 
 	return true;
 }
 
-void Graphics::Set(Sprite* sprite, int total)
+void Graphics::Set(Sprite* sprite, int total, Mesh * mesh, int meshTotal)
 {
 	this->pSprite = sprite;
 	this->totalSprites = total;
-	this->pSpritesIndex = new int[this->totalSprites];
 
-	for (int i = 0; i < this->totalSprites; i++)
-	{
-		this->pSpritesIndex[i] = sprite[i].index;
-	}
+	this->totalMesh = meshTotal;
+	this->pMesh = mesh;
+
+	this->Init_light();
 	this->InitializeVB();
 }
 
@@ -48,11 +48,15 @@ void Graphics::RenderFrame()
 	this->pD3DDevice->SetTransform(D3DTS_VIEW, &this->camera.GetViewMatrix());
 	this->pD3DDevice->SetTransform(D3DTS_PROJECTION, &this->camera.GetProjectionMatrix());
 
+	//============================================================================================
+	//Draw 3D mesh model
+
 	this->DrawWall();
-	//this->Draw();
+	this->Draw();
+	//============================================================================================
+
 
 	this->pD3Dspt->Begin(D3DXSPRITE_ALPHABLEND);    // begin sprite drawing
-
 
 	this->DrawUI();
 
@@ -144,6 +148,44 @@ bool Graphics::UninitializeDirectX(HWND hwnd)
 		pD3D = NULL;
 	}
 	return true;
+}
+
+void Graphics::Init_light()
+{
+
+	D3DLIGHT9 light[10];
+	ZeroMemory(&light, sizeof(light));
+	light[0].Type = D3DLIGHT_POINT;
+	light[0].Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	light[0].Range = 100.0f;
+	light[0].Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	light[0].Specular = D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f);
+	light[0].Attenuation0 = 0.0f;
+	light[0].Attenuation1 = 1.0f;
+	light[0].Attenuation2 = 0.0f;
+
+	light[1].Type = D3DLIGHT_DIRECTIONAL;    // make the light type 'directional light'
+	light[1].Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);    // set the light's color
+	light[1].Direction = D3DXVECTOR3(-1.0f, -0.3f, -1.0f);
+
+	light[2].Type = D3DLIGHT_DIRECTIONAL;    // make the light type 'directional light'
+	light[2].Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);    // set the light's color
+	light[2].Direction = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+
+	light[3].Type = D3DLIGHT_DIRECTIONAL;    // make the light type 'directional light'
+	light[3].Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);    // set the light's color
+	light[3].Direction = D3DXVECTOR3(-1.0f, 1.0f, 1.0f);
+
+	pD3DDevice->SetLight(0, &light[0]);
+	pD3DDevice->LightEnable(0, FALSE);
+	pD3DDevice->SetLight(1, &light[1]);
+	pD3DDevice->LightEnable(1, FALSE);
+	pD3DDevice->SetLight(2, &light[2]);
+	pD3DDevice->LightEnable(2, TRUE);
+	pD3DDevice->SetLight(3, &light[3]);
+	pD3DDevice->LightEnable(3, TRUE);
+
+	
 }
 
 
@@ -427,35 +469,42 @@ void Graphics::DrawWall()
 
 void Graphics::Draw()
 {
-	for (int index = 0; index < totalSprites; index++)
-	{
-		D3DXMATRIX mtxScl;					//スケーリング行列
-		D3DXMATRIX mtxRot;					//回転行列
-		D3DXMATRIX mtxTrs;					//平行移動行列
 
+	pD3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+	D3DXMATRIX mtxScl;					//スケーリング行列
+	D3DXMATRIX mtxRot;					//回転行列
+	D3DXMATRIX mtxTrs;					//平行移動行列
+
+	
+
+	for (int j = 0; j < totalMesh; j++)
+	{
 		D3DXMatrixIdentity(&mtxWorld);	//ワールド行列の単位行列の初期化
-		//スケール行列を作成＆ワールド行列へ合成
-		D3DXMatrixScaling(&mtxScl, this->pSprite[index].size.x, this->pSprite[index].size.y, 1);
+	//スケール行列を作成＆ワールド行列へ合成
+		D3DXMatrixScaling(&mtxScl, this->pMesh[j].size.x, this->pMesh[j].size.y, 1);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxScl);	//World*Scaling
 
-		//D3DXMatrixScaling(&mtxScl, this->textureController.GetWidth((TextureIndex)this->pSprite[index].index)/ WINDOW_WIDTH, this->textureController.GetHeight((TextureIndex)this->pSprite[index].index)/ WINDOW_HEIGHT, this->pSprite[index].size.z);
-		//D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxScl);	//World*Scaling
-
 		//回転行列を作成＆ワールド行列への合成
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, this->pSprite[index].rot.y, this->pSprite[index].rot.x, this->pSprite[index].rot.z);
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, this->pMesh[j].rot.y, this->pMesh[j].rot.x, this->pMesh[j].rot.z);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);	//World*Rotation
 		//平行移動行列を作成＆ワールド行列への合成
-		D3DXMatrixTranslation(&mtxTrs, this->pSprite[index].pos.x, this->pSprite[index].pos.y, this->pSprite[index].pos.z);
+		D3DXMatrixTranslation(&mtxTrs, this->pMesh[j].pos.x, this->pMesh[j].pos.y, this->pMesh[j].pos.z);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrs);	//World*Tranlation
 
-		//ワールドマトリックスを設定
-		this->pD3DDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
-		this->pD3DDevice->SetStreamSource(0, this->pD3DVtxBuff, 0, sizeof(VERTEX_3D));
-		this->pD3DDevice->SetFVF(FVF_VERTEX3D);
-		this->pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-		this->pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-		this->pD3DDevice->SetTexture(0, this->textureController.GetTexture((TextureIndex)this->pSprite[index].index));
-		this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
+		pD3DDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
+		pD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+		pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+
+		for (int i = 0; i < this->meshController.mesh_members[pMesh[j].index].numMaterials; i++)    // loop through each subset
+		{
+			pD3DDevice->SetMaterial(&this->meshController.mesh_members[pMesh[j].index].material[i]);    // set the appropriate material for the subset
+			if (this->meshController.mesh_members[pMesh[j].index].texture[i] != NULL)    // if the subset has a texture (if texture is not NULL)
+				pD3DDevice->SetTexture(0, this->meshController.mesh_members[pMesh[j].index].texture[i]);    // ...then set the texture
+
+			this->meshController.mesh_members[pMesh[j].index].pDXMeshModel->DrawSubset(i);    // draw the subset
+		}
 	}
 }
 

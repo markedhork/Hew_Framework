@@ -12,8 +12,6 @@ typedef struct TextureFile_tag
 } TextureFile;
 
 static const TextureFile g_TextureFiles[] = {
-	{ "asset/texture/airou.png", 256, 256 },
-	{ "asset/texture/KIZUNA.jpg", 225, 225 },
 	{ "asset/texture/wall.jpg", 64, 64 },
 
 	{ "asset/texture/Title_1.png", 1600, 900 },
@@ -27,8 +25,6 @@ static const int TEXTURE_FILE_COUNT = sizeof(g_TextureFiles) / sizeof(g_TextureF
 
 typedef enum TextureIndex
 {
-	TEXTURE_INDEX_AIRO,
-	TEXTURE_INDEX_KIZUNA,
 	TEXTURE_INDEX_WALL,
 
 	TEXTURE_INDEX_TITLE_1,

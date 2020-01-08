@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneMgr.h"
+#include "..//Handhold.h"
 #define PLAYER_STATE Game1_sprite[0]
 
 class Game1 :
@@ -12,6 +13,6 @@ public:
 private:
 	PLAYER player;
 	PLAYER recPlayer;
-
+	Handhold handhold;
 };
 

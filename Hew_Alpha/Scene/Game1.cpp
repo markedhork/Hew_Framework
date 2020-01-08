@@ -2,17 +2,19 @@
 
 // position.xyz , rotation.xyz , size.xyz , TextureIndex number
 Sprite Game1_sprite[] = {
-	{D3DXVECTOR3(0,0,-0.2),D3DXVECTOR3(0,0,0),D3DXVECTOR2(1,1),TEXTURE_INDEX_AIRO},
-	//{D3DXVECTOR3(0,0,5),D3DXVECTOR3(0,0,0),D3DXVECTOR3(10,10,1),1}
+	{D3DXVECTOR3(0,0,1.0f),D3DXVECTOR3(0,0,0),D3DXVECTOR2(1,1),TEXTURE_INDEX_TITLE_BG},
 };
-
+Mesh Game1_mesh[] = {
+	{D3DXVECTOR3(0,0,-0.2),D3DXVECTOR3(0,0,0),D3DXVECTOR3(1,1,1),MESH_INDEX_PLAYER},
+};
 // 読み込みテクスチャ数
 static const int SPRITE_COUNT_G1 = sizeof(Game1_sprite) / sizeof(Game1_sprite[0]);
+static const int MESH_COUNT_G1 = sizeof(Game1_mesh) / sizeof(Game1_mesh[0]);
 
 bool Game1::Set()
 {
-	this->gfx->Set(Game1_sprite, SPRITE_COUNT_G1);
-	this->gfx->camera.SetPosition(0, 0, -5.0f);
+	this->gfx->Set(Game1_sprite, SPRITE_COUNT_G1, Game1_mesh, MESH_COUNT_G1);
+	this->gfx->camera.SetPosition(0, 0, -3.0f);
 	this->gfx->camera.SetRotation(0, 0, 0);
 	this->player.PX = 2;
 	this->player.PY = 0;

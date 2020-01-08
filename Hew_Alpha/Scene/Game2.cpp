@@ -1,22 +1,30 @@
 #include "Game2.h"
 Sprite Game2_sprite[] = {
-	{D3DXVECTOR3(0,0,-0.2),D3DXVECTOR3(0,0,0),D3DXVECTOR2(1,1),TEXTURE_INDEX_KIZUNA},
+	{D3DXVECTOR3(0,0,1.0f),D3DXVECTOR3(0,0,0),D3DXVECTOR2(1,1),TEXTURE_INDEX_TITLE_BG},
 	//{D3DXVECTOR3(0,0,5),D3DXVECTOR3(0,0,0),D3DXVECTOR3(10,10,1),1}
+};
+
+Mesh Game2_mesh[] = {
+	{D3DXVECTOR3(0,0,-0.2),D3DXVECTOR3(0,0,0),D3DXVECTOR3(1,1,1),MESH_INDEX_PLAYER},
 };
 
 // 読み込みテクスチャ数
 static const int SPRITE_COUNT_G2 = sizeof(Game2_sprite) / sizeof(Game2_sprite[0]);
-
+static const int MESH_COUNT_G2 = sizeof(Game2_mesh) / sizeof(Game2_mesh[0]);
 bool Game2::Set()
 {
-	this->gfx->Set(Game2_sprite, SPRITE_COUNT_G2);
-	this->gfx->camera.SetPosition(0, 0, -3.0f);
+	this->gfx->Set(Game2_sprite, SPRITE_COUNT_G2, Game2_mesh, MESH_COUNT_G2);
+	this->gfx->camera.SetPosition(0, 0, -5.0f);
+	this->gfx->camera.SetRotation(0, 0, 0);
+
+	this->ball.SetDevice(this->gfx->GetDevice());
+	this->ball.CreateMeshBuffer();
 	return true;
 }
 
 int Game2::Update()
 {
-
+	this->ball.Update();
 	float dt = this->timer->GetMilisecondsElapsed();
 	this->timer->Restart();
 
@@ -49,6 +57,17 @@ int Game2::Update()
 		}
 		if (this->mouse->IsLeftDown() && this->CheckClickInZone())
 		{
+			//ready
+			RdyToKick = true;
+
+		}
+		if (me.GetType() == MouseEvent::EventType::LRelease)
+		{
+			if (RdyToKick == true)
+			{
+				ball.Generate(this->gfx->camera.GetPositionVector(), 2.0f);
+				RdyToKick = false;
+			}
 
 		}
 	}
@@ -56,8 +75,7 @@ int Game2::Update()
 	const float cameraSpeed = 0.01f;
 
 
-	//if (this->keyboard->KeyIsPressed(VK_UP))
-	if (this->mouse->IsLeftDoubleClick())
+	if (this->keyboard->KeyIsPressed(VK_UP))
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetForwardVector()*cameraSpeed*dt);
 	}
@@ -89,6 +107,7 @@ bool Game2::Draw()
 {
 	this->gfx->RenderFrame();
 
+	this->ball.Draw();
 
 	this->gfx->RenderFrame_end();
 
