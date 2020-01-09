@@ -1,4 +1,5 @@
-﻿  Ball.cpp
-d:\hew\hew_alpha_withnetwork\hew_alpha\ball.cpp(28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\hew\hew_alpha_withnetwork\hew_alpha\ball.cpp(98): warning C4018: '<': signed/unsigned mismatch
+﻿  Game1.cpp
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\texture.h(35): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\meshclass.h(25): warning C4091: 'typedef ': ignored on left of 'MeshIndex' when no variable is declared
+d:\hew\hew_alpha_withnetwork\hew_alpha\scene\game1.cpp(31): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   Hew_Alpha.vcxproj -> D:\HEW\Hew_Alpha_withNetwork\Debug\Hew_Alpha.exe

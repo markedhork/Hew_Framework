@@ -5,7 +5,7 @@ Sprite Game1_sprite[] = {
 	{D3DXVECTOR3(0,0,1.0f),D3DXVECTOR3(0,0,0),D3DXVECTOR2(1,1),TEXTURE_INDEX_TITLE_BG},
 };
 Mesh Game1_mesh[] = {
-	{D3DXVECTOR3(0,0,-1),D3DXVECTOR3(0,0,0),D3DXVECTOR3(1,1,1),MESH_INDEX_PLAYER},
+	{D3DXVECTOR3(0,0,-1),D3DXVECTOR3(0,180,0),D3DXVECTOR3(1,1,1),MESH_INDEX_PLAYER},
 };
 // 読み込みテクスチャ数
 static const int SPRITE_COUNT_G1 = sizeof(Game1_sprite) / sizeof(Game1_sprite[0]);
@@ -14,7 +14,7 @@ static const int MESH_COUNT_G1 = sizeof(Game1_mesh) / sizeof(Game1_mesh[0]);
 bool Game1::Set()
 {
 	this->gfx->Set(Game1_sprite, SPRITE_COUNT_G1, Game1_mesh, MESH_COUNT_G1);
-	this->gfx->camera.SetPosition(0, 0, -3.0f);
+	this->gfx->camera.SetPosition(PLAYER_POS.x, PLAYER_POS.y + 1.0f, PLAYER_POS.z - 3.0f);
 	this->gfx->camera.SetRotation(0, 0, 0);
 	this->player.x = PLAYER_POS.x;
 	this->player.y = PLAYER_POS.y;
@@ -71,10 +71,20 @@ int Game1::Update()
 		}
 	}
 
-
+	//temp
+	static int tempcount = 0;
 	if (this->keyboard->KeyIsTrigger('Q'))
 	{
-
+		for (int i = tempcount; i < MAX_HOLDER; i++)
+		{
+			if (this->handhold.holders[i].use == true)
+			{
+				PLAYER_POS.x = this->handhold.holders[i].px;
+				PLAYER_POS.y = this->handhold.holders[i].py;
+				tempcount++;
+				break;
+			}
+		}
 	}
 	else if (this->keyboard->KeyIsTrigger('W'))
 	{
@@ -112,12 +122,35 @@ int Game1::Update()
 
 	}
 
+
+
+	this->player.x = PLAYER_POS.x;
+	this->player.y = PLAYER_POS.y;
+
 	const float cameraSpeed = 0.01f;
+	D3DXVECTOR3 camPos = this->gfx->camera.GetPositionVector();
+
+	if (camPos != D3DXVECTOR3(this->player.x, this->player.y + 1.0f, PLAYER_POS.z - 3.0f))
+	{
+		float distance = sqrtf((this->player.x - camPos.x) * (this->player.x - camPos.x) +
+			(this->player.y + 1.0f - camPos.y) * (this->player.y + 1.0f - camPos.y));
+		if (distance < CAMERA_SPD)
+		{
+			this->gfx->camera.SetPosition(this->player.x, this->player.y + 1.0f, PLAYER_POS.z - 3.0f);
+		}
+		else
+		{
+			float tmpSin = (this->player.y + 1.0f - camPos.y) / distance;
+			float tmpCos = (this->player.x - camPos.x) / distance;
+			this->gfx->camera.AdjustPosition(CAMERA_SPD*tmpCos, CAMERA_SPD*tmpSin, 0.0f);
+		}
+	}
+
 
 	//if moved
 	if (this->player.x != recPlayer.x || player.y != recPlayer.y)
 	{
-		this->gfx->camera.SetPosition(PLAYER_POS.x, PLAYER_POS.y, -5.0f);
+		
 		SERVER_MSG msg;
 		msg.px = PLAYER_POS.x;
 		msg.py = PLAYER_POS.y;

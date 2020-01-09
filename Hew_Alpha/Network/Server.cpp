@@ -128,8 +128,6 @@ void Server::Connect()
 
 void Server::Send(SERVER_MSG *data)
 {
-	//send message from client
-	OutputDebugStringA("new msg to send\n");
 	//Send message to client
 	if (client_socket != INVALID_SOCKET)
 	{
@@ -142,6 +140,10 @@ void Server::Send(SERVER_MSG *data)
 		{
 			OutputDebugStringA("msg send to client\n");
 		}
+	}
+	else
+	{
+		OutputDebugStringA("lost client socket\n");
 	}
 
 }

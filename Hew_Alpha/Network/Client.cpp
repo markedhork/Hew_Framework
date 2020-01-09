@@ -137,6 +137,7 @@ void Client::ProcessClient()
 				OutputDebugStringA(Outmsg.c_str());
 
 				this->message = tempRecv;
+				this->NewMsg = true;
 			}
 			else
 			{

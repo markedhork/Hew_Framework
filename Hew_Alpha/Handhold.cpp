@@ -56,6 +56,11 @@ void Handhold::Uninitialize()
 	}
 }
 
+void Handhold::Update()
+{
+
+}
+
 void Handhold::Draw()
 {
 	for (int i = 0; i < this->activedTotal; i++)

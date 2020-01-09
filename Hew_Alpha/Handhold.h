@@ -5,7 +5,7 @@
 #define MAX_HOLDER (500)
 #define MESH_FILE_PATH			"asset/mesh/curveWall_small.x"
 
-
+#define TOTAL_TARGET	(8)
 
 struct Holders
 {
@@ -18,14 +18,15 @@ class Handhold
 {
 public:
 	~Handhold();
-	Holders holders[500];
+	Holders holders[MAX_HOLDER];
 	int activedTotal = 0;
 	void CreateMeshBuffer();
 
 	void SetDevice(LPDIRECT3DDEVICE9 pD3Device);
 	void Uninitialize();
 
-
+	void Update();
+	Holders targets[TOTAL_TARGET];
 
 	void Draw();
 

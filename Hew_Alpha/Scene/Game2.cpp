@@ -5,7 +5,7 @@ Sprite Game2_sprite[] = {
 };
 
 Mesh Game2_mesh[] = {
-	{D3DXVECTOR3(0,0,-1),D3DXVECTOR3(0,0,0),D3DXVECTOR3(1,1,1),MESH_INDEX_PLAYER},
+	{D3DXVECTOR3(0,0,-1),D3DXVECTOR3(0,180,0),D3DXVECTOR3(1,1,1),MESH_INDEX_PLAYER},
 };
 
 // 読み込みテクスチャ数

@@ -485,8 +485,9 @@ void Graphics::Draw()
 		D3DXMatrixScaling(&mtxScl, this->pMesh[j].size.x, this->pMesh[j].size.y, 1);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxScl);	//World*Scaling
 
+		
 		//回転行列を作成＆ワールド行列への合成
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, this->pMesh[j].rot.y, this->pMesh[j].rot.x, this->pMesh[j].rot.z);
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, D3DXToRadian(this->pMesh[j].rot.y), D3DXToRadian(this->pMesh[j].rot.x), D3DXToRadian(this->pMesh[j].rot.z));
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);	//World*Rotation
 		//平行移動行列を作成＆ワールド行列への合成
 		D3DXMatrixTranslation(&mtxTrs, this->pMesh[j].pos.x, this->pMesh[j].pos.y, this->pMesh[j].pos.z);

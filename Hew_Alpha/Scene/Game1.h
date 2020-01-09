@@ -3,6 +3,7 @@
 #include "..//Handhold.h"
 
 #define PLAYER_POS		Game1_mesh[0].pos
+#define CAMERA_SPD		(0.1f)
 
 class Game1 :
 	public SceneMgr
