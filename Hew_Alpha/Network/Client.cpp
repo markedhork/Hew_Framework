@@ -8,13 +8,13 @@ Client::Client()
 
 Client::~Client()
 {
-	int iResult = shutdown(server.socket, SD_SEND);
+	int iResult = shutdown(server_socket, SD_SEND);
 	if (iResult == SOCKET_ERROR) {
 		OutputDebugStringA("shutdown() failed with error\n");
 	}
 	this->process_thread.detach();
 	this->connect_thread.detach();
-	closesocket(server.socket);
+	closesocket(server_socket);
 
 }
 
@@ -47,8 +47,8 @@ void Client::Connect()
 	for (ptr = result; ptr != NULL; ptr = ptr->ai_next)
 	{
 		// Create a SOCKET for connecting to server
-		server.socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-		if (server.socket == INVALID_SOCKET) {
+		server_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+		if (server_socket == INVALID_SOCKET) {
 			int error = WSAGetLastError();
 			std::string outmsg = "socket() failed Error: ";
 
@@ -60,16 +60,16 @@ void Client::Connect()
 		}
 
 		// Connect to server.
-		int iResult = connect(server.socket, result->ai_addr, (int)result->ai_addrlen);
+		int iResult = connect(server_socket, result->ai_addr, (int)result->ai_addrlen);
 		if (iResult == SOCKET_ERROR) {
-			closesocket(server.socket);
-			server.socket = INVALID_SOCKET;
+			closesocket(server_socket);
+			server_socket = INVALID_SOCKET;
 			continue;
 		}
 	}
 
 	freeaddrinfo(result);
-	if (server.socket == INVALID_SOCKET) {
+	if (server_socket == INVALID_SOCKET) {
 		OutputDebugStringA("Unable to connect to server!\n");
 	}
 	else
@@ -79,21 +79,41 @@ void Client::Connect()
 	this->process_thread = std::thread(&Client::ProcessClient, this);
 }
 
-void Client::Send(int *p)
+void Client::Send(CLIENT_MSG *data)
 {
-	sent_message = "";
-	sent_message += std::to_string(p[0]);
-	newMsg = true;
-
-	if (newMsg && server.socket != 0)
+	if (server_socket != 0)
 	{
-		int iResult = send(server.socket, sent_message.c_str(), strlen(sent_message.c_str()), 0);
+		int iResult = send(server_socket, (char*)data, sizeof(CLIENT_MSG), 0);
 		if (iResult < 0)
 		{
 			OutputDebugStringA("Client send() to server failed\n");
 		}
-		newMsg = false;
 	}
+}
+
+void Client::Send(SERVER_MSG * p)
+{
+}
+
+bool Client::IfMsgFromServer()
+{
+	return this->NewMsg;
+}
+
+SERVER_MSG Client::GetMsgFromServer()
+{
+	this->NewMsg = false;
+	return this->message;
+}
+
+bool Client::IfMsgFromClient()
+{
+	return false;
+}
+
+CLIENT_MSG Client::GetMsgFromClient()
+{
+	return CLIENT_MSG();
 }
 
 void Client::ProcessClient()
@@ -102,19 +122,21 @@ void Client::ProcessClient()
 
 	while (1)
 	{
-		memset(server.received_message, 0, DEFAULT_BUFLEN);
-
-		if (server.socket != 0)
+		if (server_socket != 0)
 		{
-			int iResult = recv(server.socket, server.received_message, DEFAULT_BUFLEN, 0);
+			SERVER_MSG tempRecv;
+			int iResult = recv(server_socket, (char*)&tempRecv, sizeof(SERVER_MSG), 0);
+			
 
 			if (iResult != SOCKET_ERROR)
 			{
-				std::string Outmsg = "";
+				std::string Outmsg = "message from server";
 
-				Outmsg += server.received_message;
+				Outmsg += (char*)&tempRecv;
 				Outmsg += "\n";
 				OutputDebugStringA(Outmsg.c_str());
+
+				this->message = tempRecv;
 			}
 			else
 			{

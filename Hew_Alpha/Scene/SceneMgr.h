@@ -4,10 +4,7 @@
 #include "..//Mouse/MouseClass.h"
 #include "..//Keyboard/KeyboardClass.h"
 
-struct PLAYER
-{
-	int PX, PY;
-};
+
 enum SC_NUM
 {
 	TITLE_NUM,

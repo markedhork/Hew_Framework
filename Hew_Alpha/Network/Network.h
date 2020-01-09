@@ -7,15 +7,22 @@
 
 #pragma comment (lib, "Ws2_32.lib")
 
-#define DEFAULT_BUFLEN 256            
 #define IP_ADDRESS "192.168.11.2"
 #define DEFAULT_PORT "3504"
 
-struct client_type
+struct CLIENT_MSG
 {
-	SOCKET socket;
-	char received_message[DEFAULT_BUFLEN];
+	int number;
+	float x;
+	float y;
 };
+
+struct SERVER_MSG
+{
+	float px;
+	float py;
+};
+
 
 enum NET_TYPE
 {
@@ -30,7 +37,14 @@ public:
 	~Network();
 	virtual bool Set() = 0;
 	virtual void Process() = 0;
-	virtual void Send(int *p) = 0;
+	virtual void Send(CLIENT_MSG *p) = 0;
+	virtual void Send(SERVER_MSG *p) = 0;
+	virtual bool IfMsgFromClient() = 0;
+	virtual CLIENT_MSG GetMsgFromClient() = 0;
+
+	virtual bool IfMsgFromServer() = 0;
+	virtual SERVER_MSG GetMsgFromServer() = 0;
+
 	int GetType();
 	bool IfConected();
 protected:

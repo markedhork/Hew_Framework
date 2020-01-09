@@ -1,7 +1,8 @@
 #pragma once
 #include "SceneMgr.h"
 #include "..//Handhold.h"
-#define PLAYER_STATE Game1_sprite[0]
+
+#define PLAYER_POS		Game1_mesh[0].pos
 
 class Game1 :
 	public SceneMgr
@@ -11,8 +12,8 @@ public:
 	int Update();
 	bool Draw();
 private:
-	PLAYER player;
-	PLAYER recPlayer;
+	D3DXVECTOR3 player;
+	D3DXVECTOR3 recPlayer;
 	Handhold handhold;
 };
 
