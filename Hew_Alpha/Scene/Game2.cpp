@@ -21,6 +21,10 @@ bool Game2::Set()
 	this->ball.CreateMeshBuffer();
 	this->handhold.SetDevice(this->gfx->GetDevice());
 	this->handhold.CreateMeshBuffer();
+	
+	D3DXCreateFont(this->gfx->GetDevice(), 100, 0, FW_ULTRABOLD, 1, false, DEFAULT_CHARSET,
+		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
+		"Comic Sans MS", &pDXfont);
 
 	return true;
 }
@@ -28,7 +32,11 @@ bool Game2::Set()
 int Game2::Update()
 {
 	float dt = this->timer->GetMilisecondsElapsed();
-	this->timer->Restart();
+	if (dt > 1000.0f)
+	{
+		this->timer->Restart();
+		CountDown--;
+	}
 
 	this->ball.Update();
 
@@ -120,34 +128,11 @@ int Game2::Update()
 				this->gfx->camera.AdjustRotation((float)me.GetPosX()*0.01f, (float)me.GetPosY()*0.01f, 0.0f);
 			}
 		}
-		if (this->mouse->IsLeftDown() && this->CheckClickInZone())
-		{
-			//ready
-			RdyToKick = true;
 
-		}
-		if (me.GetType() == MouseEvent::EventType::LRelease)
-		{
-			if (RdyToKick == true)
-			{
-				ball.Generate(this->gfx->camera.GetPositionVector(), NULL); // wanna change second param to degree
-				RdyToKick = false;
-			}
-
-		}
 	}
 
 	const float cameraSpeed = 0.01f;
 
-
-	if (this->keyboard->KeyIsPressed(VK_UP))
-	{
-		this->gfx->camera.AdjustPosition(this->gfx->camera.GetForwardVector()*cameraSpeed*dt);
-	}
-	if (this->keyboard->KeyIsPressed(VK_DOWN))
-	{
-		this->gfx->camera.AdjustPosition(this->gfx->camera.GetBackwardVector()*cameraSpeed*dt);
-	}
 	if (this->keyboard->KeyIsPressed(VK_LEFT))
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetLeftVector()*cameraSpeed*dt);
@@ -156,15 +141,18 @@ int Game2::Update()
 	{
 		this->gfx->camera.AdjustPosition(this->gfx->camera.GetRightVector()*cameraSpeed*dt);
 	}
-	if (this->keyboard->KeyIsPressed(VK_SPACE))
+	if (this->keyboard->KeyIsPressed(VK_UP))
 	{
 		this->gfx->camera.AdjustPosition(0.0f, cameraSpeed*dt, 0.0f);
 	}
-	if (this->keyboard->KeyIsPressed('N'))
+	if (this->keyboard->KeyIsPressed(VK_DOWN))
 	{
 		this->gfx->camera.AdjustPosition(0.0f, -cameraSpeed * dt, 0.0f);
 	}
-
+	if (this->keyboard->KeyIsPressed(VK_SPACE))
+	{
+		ball.Generate(this->gfx->camera.GetPositionVector(), NULL); // wanna change second param to degree
+	}
 	return GAME2_NUM;
 }
 
@@ -174,6 +162,31 @@ bool Game2::Draw()
 
 	this->ball.Draw();
 	this->handhold.Draw();
+
+	RECT textbox;
+	SetRect(&textbox, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	if (CountDown > 0)
+	{
+		static char timeText[5];
+		_itoa_s(CountDown, timeText, 10);
+		pDXfont->DrawTextA(NULL,
+			(LPCSTR)&timeText,
+			strlen((LPCSTR)&timeText),
+			&textbox,
+			DT_CENTER,
+			D3DCOLOR_ARGB(255, 120, 120, 255));
+	}
+	else
+	{
+		pDXfont->DrawTextA(NULL,
+			"GAME OVER",
+			10,
+			&textbox,
+			DT_CENTER | DT_VCENTER,
+			D3DCOLOR_ARGB(255, 120, 120, 255));
+	}
+
 
 	this->gfx->RenderFrame_end();
 

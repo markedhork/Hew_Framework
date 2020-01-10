@@ -235,14 +235,14 @@ bool Graphics::InitializeVB()
 		D3DUSAGE_WRITEONLY,								//頂点データの使用法
 		FVF_VERTEX3D,									//使用する頂点フォーマット
 		D3DPOOL_MANAGED,								//リソースのバッファを保持するメモリクラスを指定
-		&pD3DVtxBuff,									//頂点バッファインターフェースへのポインタ
+		&pVB_Wall,									//頂点バッファインターフェースへのポインタ
 		NULL);											//NULLに設定
 
 	//頂点バッファの中身を埋める
 	VERTEX_3D *pVtx2;
 
 	//頂点データの範囲をロックし、頂点バッファへのポインタを取得
-	pD3DVtxBuff->Lock(0, 0, (void**)&pVtx2, 0);
+	pVB_Wall->Lock(0, 0, (void**)&pVtx2, 0);
 
 	//1
 	/*****************************************************************************************/
@@ -401,14 +401,14 @@ bool Graphics::InitializeVB()
 	pVtx2[23].tex = D3DXVECTOR2(0.0f, 1.0f);
 
 	//頂点データをアンロックする
-	pD3DVtxBuff->Unlock();
+	pVB_Wall->Unlock();
 
 	return true;
 }
 
 void Graphics::DrawWall()
 {
-	for (int i = 0; i < MAX_BUILD; i++)
+	for (int i = 0; i < TOTAL_BUILDS; i++)
 	{
 		int mapType = Build[i];
 		if (mapType > TOTAL_MAP_STYLE || mapType <= 0)
@@ -433,7 +433,7 @@ void Graphics::DrawWall()
 				//ワールドマトリックスを設定
 				this->pD3DDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
 				//描画したいポリゴンの頂点バッファをデータストリーム(データの通り道)にセット
-				this->pD3DDevice->SetStreamSource(0, pD3DVtxBuff, 0, sizeof(VERTEX_3D));
+				this->pD3DDevice->SetStreamSource(0, pVB_Wall, 0, sizeof(VERTEX_3D));
 				//描画したいポリゴンの頂点フォーマットを設定
 				this->pD3DDevice->SetFVF(FVF_VERTEX3D);
 

@@ -17,6 +17,8 @@ static const TextureFile g_TextureFiles[] = {
 	{ "asset/texture/Title_1.png", 1600, 900 },
 	{ "asset/texture/Title_2.jpg", 1600, 900 },
 	{ "asset/texture/bt.png", 69, 69 },
+
+	{ "asset/texture/ui (2).png", 300, 300 },
 };
 
 // 読み込みテクスチャ数
@@ -30,6 +32,8 @@ typedef enum TextureIndex
 	TEXTURE_INDEX_TITLE_1,
 	TEXTURE_INDEX_TITLE_BG,
 	TEXTURE_INDEX_TITLE_BT,
+
+	TEXTURE_INDEX_TARGET,
 
 	TEXTURE_INDEX_MAX
 };

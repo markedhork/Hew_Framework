@@ -3,6 +3,7 @@
 // position.xyz , rotation.xyz , size.xyz , TextureIndex number
 Sprite Game1_sprite[] = {
 	{D3DXVECTOR3(0,0,1.0f),D3DXVECTOR3(0,0,0),D3DXVECTOR2(1,1),TEXTURE_INDEX_TITLE_BG},
+	{D3DXVECTOR3(0,-1000,0.0f),D3DXVECTOR3(0,0,0),D3DXVECTOR2(1,1),TEXTURE_INDEX_TARGET},
 };
 Mesh Game1_mesh[] = {
 	{D3DXVECTOR3(0,0,-1),D3DXVECTOR3(0,180,0),D3DXVECTOR3(1,1,1),MESH_INDEX_PLAYER},
@@ -23,14 +24,21 @@ bool Game1::Set()
 	this->handhold.SetDevice(this->gfx->GetDevice());
 	this->handhold.CreateMeshBuffer();
 
+	D3DXCreateFont(this->gfx->GetDevice(), 100, 0, FW_ULTRABOLD, 1, false, DEFAULT_CHARSET,
+		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
+		"Comic Sans MS", &pDXfont);
+
 	return true;
 }
 
 int Game1::Update()
 {
 	float dt = this->timer->GetMilisecondsElapsed();
-	this->timer->Restart();
-
+	if (dt > 1000.0f)
+	{
+		this->timer->Restart();
+		CountDown--;
+	}
 
 
 	if (this->network->IfMsgFromClient())
@@ -73,18 +81,24 @@ int Game1::Update()
 
 	//temp
 	static int tempcount = 0;
+
+	if (this->handhold.holders[tempcount].use == true)
+	{
+		TARGET1_POS.x = this->handhold.holders[tempcount].px;
+	
+		TARGET1_POS.y = this->handhold.holders[tempcount].py;
+
+	}
+
 	if (this->keyboard->KeyIsTrigger('Q'))
 	{
-		for (int i = tempcount; i < MAX_HOLDER; i++)
+		if (this->handhold.holders[tempcount].use == true)
 		{
-			if (this->handhold.holders[i].use == true)
-			{
-				PLAYER_POS.x = this->handhold.holders[i].px;
-				PLAYER_POS.y = this->handhold.holders[i].py;
-				tempcount++;
-				break;
-			}
+			PLAYER_POS.x = this->handhold.holders[tempcount].px;
+			PLAYER_POS.y = this->handhold.holders[tempcount].py;
+			tempcount++;
 		}
+
 	}
 	else if (this->keyboard->KeyIsTrigger('W'))
 	{
@@ -122,8 +136,6 @@ int Game1::Update()
 
 	}
 
-
-
 	this->player.x = PLAYER_POS.x;
 	this->player.y = PLAYER_POS.y;
 
@@ -150,36 +162,11 @@ int Game1::Update()
 	//if moved
 	if (this->player.x != recPlayer.x || player.y != recPlayer.y)
 	{
-		
+
 		SERVER_MSG msg;
 		msg.px = PLAYER_POS.x;
 		msg.py = PLAYER_POS.y;
 		this->network->Send(&msg);
-	}
-
-	if (this->keyboard->KeyIsPressed(VK_UP))
-	{
-		this->gfx->camera.AdjustPosition(this->gfx->camera.GetForwardVector()*cameraSpeed*dt);
-	}
-	if (this->keyboard->KeyIsPressed(VK_DOWN))
-	{
-		this->gfx->camera.AdjustPosition(this->gfx->camera.GetBackwardVector()*cameraSpeed*dt);
-	}
-	if (this->keyboard->KeyIsPressed(VK_LEFT))
-	{
-		this->gfx->camera.AdjustPosition(this->gfx->camera.GetLeftVector()*cameraSpeed*dt);
-	}
-	if (this->keyboard->KeyIsPressed(VK_RIGHT))
-	{
-		this->gfx->camera.AdjustPosition(this->gfx->camera.GetRightVector()*cameraSpeed*dt);
-	}
-	if (this->keyboard->KeyIsPressed(VK_SPACE))
-	{
-		this->gfx->camera.AdjustPosition(0.0f, cameraSpeed*dt, 0.0f);
-	}
-	if (this->keyboard->KeyIsPressed('N'))
-	{
-		this->gfx->camera.AdjustPosition(0.0f, -cameraSpeed * dt, 0.0f);
 	}
 
 	return GAME1_NUM;
@@ -190,6 +177,31 @@ bool Game1::Draw()
 	this->gfx->RenderFrame();
 
 	this->handhold.Draw();
+
+	RECT textbox;
+	SetRect(&textbox, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	if (CountDown > 0)
+	{
+		static char timeText[5];
+		_itoa_s(CountDown, timeText, 10);
+		pDXfont->DrawTextA(NULL,
+			(LPCSTR)&timeText,
+			strlen((LPCSTR)&timeText),
+			&textbox,
+			DT_CENTER,
+			D3DCOLOR_ARGB(255, 120, 120, 255));
+	}
+	else
+	{
+		pDXfont->DrawTextA(NULL,
+			"GAME OVER",
+			10,
+			&textbox,
+			DT_CENTER | DT_VCENTER,
+			D3DCOLOR_ARGB(255, 120, 120, 255));
+	}
+
 
 	this->gfx->RenderFrame_end();
 

@@ -25,5 +25,8 @@ private:
 	int pointTotal = 0;
 
 	Handhold	handhold;
+
+	LPD3DXFONT			pDXfont;    // the pointer to the font object
+	int					CountDown = 90;
 };
 

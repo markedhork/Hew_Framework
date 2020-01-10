@@ -1,5 +1,33 @@
-﻿  Game1.cpp
-d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\texture.h(35): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
+﻿  Engine.cpp
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\texture.h(39): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
 d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\meshclass.h(25): warning C4091: 'typedef ': ignored on left of 'MeshIndex' when no variable is declared
-d:\hew\hew_alpha_withnetwork\hew_alpha\scene\game1.cpp(31): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\hew\hew_alpha_withnetwork\hew_alpha\ball.h(16): warning C4005: 'MESH_FILE_PATH': macro redefinition
+  d:\hew\hew_alpha_withnetwork\hew_alpha\handhold.h(6): note: see previous definition of 'MESH_FILE_PATH'
+d:\hew\hew_alpha_withnetwork\hew_alpha\scene\game2.h(9): warning C4005: 'PLAYER_POS': macro redefinition
+  d:\hew\hew_alpha_withnetwork\hew_alpha\scene\game1.h(6): note: see previous definition of 'PLAYER_POS'
+  Game1.cpp
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\texture.h(39): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\meshclass.h(25): warning C4091: 'typedef ': ignored on left of 'MeshIndex' when no variable is declared
+d:\hew\hew_alpha_withnetwork\hew_alpha\scene\game1.cpp(36): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Game2.cpp
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\texture.h(39): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\meshclass.h(25): warning C4091: 'typedef ': ignored on left of 'MeshIndex' when no variable is declared
+d:\hew\hew_alpha_withnetwork\hew_alpha\handhold.h(6): warning C4005: 'MESH_FILE_PATH': macro redefinition
+  d:\hew\hew_alpha_withnetwork\hew_alpha\ball.h(16): note: see previous definition of 'MESH_FILE_PATH'
+d:\hew\hew_alpha_withnetwork\hew_alpha\scene\game2.cpp(34): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\hew\hew_alpha_withnetwork\hew_alpha\scene\game2.cpp(57): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\hew\hew_alpha_withnetwork\hew_alpha\scene\game2.cpp(58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  Lobby.cpp
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\texture.h(39): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\meshclass.h(25): warning C4091: 'typedef ': ignored on left of 'MeshIndex' when no variable is declared
+d:\hew\hew_alpha_withnetwork\hew_alpha\scene\lobby.cpp(26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  main.cpp
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\texture.h(39): warning C4091: 'typedef ': ignored on left of 'TextureIndex' when no variable is declared
+d:\hew\hew_alpha_withnetwork\hew_alpha\graphics\meshclass.h(25): warning C4091: 'typedef ': ignored on left of 'MeshIndex' when no variable is declared
+d:\hew\hew_alpha_withnetwork\hew_alpha\ball.h(16): warning C4005: 'MESH_FILE_PATH': macro redefinition
+  d:\hew\hew_alpha_withnetwork\hew_alpha\handhold.h(6): note: see previous definition of 'MESH_FILE_PATH'
+d:\hew\hew_alpha_withnetwork\hew_alpha\scene\game2.h(9): warning C4005: 'PLAYER_POS': macro redefinition
+  d:\hew\hew_alpha_withnetwork\hew_alpha\scene\game1.h(6): note: see previous definition of 'PLAYER_POS'
+  Generating Code...
+  LINK : D:\HEW\Hew_Alpha_withNetwork\Debug\Hew_Alpha.exe not found or not built by the last incremental link; performing full link
   Hew_Alpha.vcxproj -> D:\HEW\Hew_Alpha_withNetwork\Debug\Hew_Alpha.exe

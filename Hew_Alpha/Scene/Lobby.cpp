@@ -34,7 +34,7 @@ int Lobby::Update()
 	}
 
 	this->RdyToGo = this->network->IfConected();
-	
+
 	if (this->network->GetType() == SERVER_TYPE)
 	{
 		if (CountDown < 0)
@@ -76,7 +76,7 @@ bool Lobby::Draw()
 				(LPCSTR)&timeText,
 				strlen((LPCSTR)&timeText),
 				&textbox,
-				DT_CENTER,
+				DT_CENTER | DT_VCENTER,
 				D3DCOLOR_ARGB(255, 120, 120, 255));
 		}
 		else
@@ -85,10 +85,10 @@ bool Lobby::Draw()
 				"GO!",
 				4,
 				&textbox,
-				DT_CENTER,
+				DT_CENTER | DT_VCENTER,
 				D3DCOLOR_ARGB(255, 120, 120, 255));
 		}
-		
+
 	}
 	else
 	{
@@ -99,7 +99,7 @@ bool Lobby::Draw()
 			DT_CENTER,
 			D3DCOLOR_ARGB(177, 255, 255, 255));
 	}
-	
+
 
 	this->gfx->RenderFrame_end();
 
