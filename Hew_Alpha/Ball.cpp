@@ -145,6 +145,14 @@ void Ball::CreateMeshBuffer()
 	{
 		material[i] = tempMaterials[i].MatD3D;    // get the material info...
 		material[i].Ambient = material[i].Diffuse;    // and make ambient the same as diffuse
+		//std::string addr = "asset/texture/";
+		//addr += tempMaterials[i].pTextureFilename;
+		// if there is a texture to load, load it
+		//if (FAILED(D3DXCreateTextureFromFileA(this->pDevice,
+		//	addr.c_str(),
+		//	&texture)))
+			texture = NULL;    // if there is no texture, set the texture to NULL
+
 	}
 }
 

@@ -8,7 +8,6 @@
 
 #define PLAYER_POS		Game2_mesh[0].pos
 
-
 class Game2 :
 	public SceneMgr
 {
@@ -25,6 +24,10 @@ private:
 	int pointTotal = 0;
 
 	Handhold	handhold;
+	Timer		ctimer;
+
+	D3DXVECTOR3 nextPos;
+	D3DXVECTOR3 player;
 
 	LPD3DXFONT			pDXfont;    // the pointer to the font object
 	int					CountDown = 90;

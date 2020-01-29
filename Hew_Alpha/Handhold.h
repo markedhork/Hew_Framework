@@ -6,12 +6,18 @@
 #define MESH_FILE_PATH			"asset/mesh/curveWall_small.x"
 
 #define TOTAL_TARGET	(8)
+#define MAX_DISTANCE	(1.3f)
+#define MIN_DISTANCE	(0.5f)
+
+#define PLAYER_SPD		(0.2f)
 
 struct Holders
 {
 	bool use = false;
 	float px, py;
 	int type;
+	float distance = 9999.9f;
+	float degree;
 };
 
 class Handhold
@@ -25,9 +31,15 @@ public:
 	void SetDevice(LPDIRECT3DDEVICE9 pD3Device);
 	void Uninitialize();
 
-	void Update();
-	Holders targets[TOTAL_TARGET];
+	void UpdateTarget();
+	void CheckArea(float playerX, float playerY);
+	void CheckSolo(int index);
 
+	void ResetTarget();
+
+	//3:TL 2:TC 1:TR 4:CL 0:CR 5:DL 6:DC 7:DR
+	Holders targets[TOTAL_TARGET];
+	Holders temp[50];
 	void Draw();
 
 private:

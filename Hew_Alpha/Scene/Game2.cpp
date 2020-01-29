@@ -1,11 +1,11 @@
 #include "Game2.h"
 Sprite Game2_sprite[] = {
 	{D3DXVECTOR3(0,0,1.0f),D3DXVECTOR3(0,0,0),D3DXVECTOR2(1,1),TEXTURE_INDEX_TITLE_BG},
-	//{D3DXVECTOR3(0,0,5),D3DXVECTOR3(0,0,0),D3DXVECTOR3(10,10,1),1}
+
 };
 
 Mesh Game2_mesh[] = {
-	{D3DXVECTOR3(0,0,-1),D3DXVECTOR3(0,180,0),D3DXVECTOR3(1,1,1),MESH_INDEX_PLAYER},
+	{D3DXVECTOR3(0,-0.5f,-1),D3DXVECTOR3(0,180,0),D3DXVECTOR3(1,1,1),MESH_INDEX_PLAYER},
 };
 
 // 読み込みテクスチャ数
@@ -21,18 +21,30 @@ bool Game2::Set()
 	this->ball.CreateMeshBuffer();
 	this->handhold.SetDevice(this->gfx->GetDevice());
 	this->handhold.CreateMeshBuffer();
-	
+
+	player.x = PLAYER_POS.x;
+	player.y = PLAYER_POS.y + 1.5f;
+	player.z = PLAYER_POS.z;
+
+	nextPos.x = player.x;
+	nextPos.y = player.y;
+	nextPos.z = player.z;
+
 	D3DXCreateFont(this->gfx->GetDevice(), 100, 0, FW_ULTRABOLD, 1, false, DEFAULT_CHARSET,
 		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
 		"Comic Sans MS", &pDXfont);
 
+
+	ctimer.Start();
 	return true;
 }
 
 int Game2::Update()
 {
-	float dt = this->timer->GetMilisecondsElapsed();
-	if (dt > 1000.0f)
+	float ct = this->timer->GetMilisecondsElapsed();
+	float dt = ctimer.GetMilisecondsElapsed() / 1000.0f;
+	ctimer.Restart();
+	if (ct > 1000.0f)
 	{
 		this->timer->Restart();
 		CountDown--;
@@ -103,8 +115,28 @@ int Game2::Update()
 	{
 		SERVER_MSG temp = this->network->GetMsgFromServer();
 
-		PLAYER_POS.x = temp.px;
-		PLAYER_POS.y = temp.py;
+		nextPos.x = temp.px;
+		nextPos.y = temp.py;
+		nextPos.z = PLAYER_POS.z;
+	}
+
+	if (this->nextPos != player)
+	{
+		float dist = sqrtf((nextPos.x - nextPos.x) * (nextPos.x - player.x) +
+			(nextPos.y - player.y) * (nextPos.y - player.y));
+		if (dist < PLAYER_SPD)
+		{
+			player = this->nextPos;
+		}
+		else
+		{
+			float tmpSin = (nextPos.y - player.y) / dist;
+			float tmpCos = (nextPos.x - player.x) / dist;
+			player.x += PLAYER_SPD * tmpCos;
+			player.y += PLAYER_SPD * tmpSin;
+		}
+		PLAYER_POS = player;
+		PLAYER_POS.y -= 1.5f;
 	}
 
 	while (!this->keyboard->CharBufferIsEmpty())
@@ -128,10 +160,9 @@ int Game2::Update()
 				this->gfx->camera.AdjustRotation((float)me.GetPosX()*0.01f, (float)me.GetPosY()*0.01f, 0.0f);
 			}
 		}
-
 	}
 
-	const float cameraSpeed = 0.01f;
+	const float cameraSpeed = 2.0f;
 
 	if (this->keyboard->KeyIsPressed(VK_LEFT))
 	{

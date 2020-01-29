@@ -20,8 +20,13 @@ public:
 	void RenderFrame();
 	void RenderFrame_end();
 	void Set(Sprite* sprite, int totalSprite, Mesh * mesh, int meshTotal);
+
+	void DrawBillboard(D3DXVECTOR3 pos, D3DXVECTOR2 size, int index);
+
 	LPDIRECT3DDEVICE9 GetDevice();
 	Camera camera;
+
+	float hight = 0;
 private:
 	bool InitializeDirectX(HWND hwnd);
 	bool UninitializeDirectX(HWND hwnd);
@@ -41,6 +46,8 @@ private:
 	Texture				textureController;
 	MeshClass			meshController;
 
+
+
 	int					windowWidth = 0;
 	int					windowHeight = 0;
 	Timer				fpsTimer;
@@ -54,6 +61,7 @@ private:
 
 	LPDIRECT3DVERTEXBUFFER9 pVB_Wall;
 	LPDIRECT3DVERTEXBUFFER9 pVB_Sprite;
+
 
 };
 

@@ -32,6 +32,18 @@ struct MeshMember
 	LPDIRECT3DTEXTURE9		*texture;
 };
 
+struct CUSTOM_FRAME : public D3DXFRAME
+{
+	D3DXMATRIX CombTransformationMatrix;    // transform data multiplied by all parents' data
+};
+
+struct CUSTOM_MESHCONTAINER : public D3DXMESHCONTAINER
+{
+	D3DXMATRIX** ppFrameMatrices;    // an array of matrices to store current animation data
+	LPD3DXMESH pFinalMesh;    // a duplicate of the mesh, representing it's current pose
+	LPDIRECT3DTEXTURE9* pTextures;    // an array of applicable textures
+};
+
 class MeshClass
 {
 public:

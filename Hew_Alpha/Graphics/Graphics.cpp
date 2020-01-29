@@ -14,7 +14,10 @@ bool Graphics::Initialize(HWND hwnd, int width, int height)
 	this->textureController.Load(hwnd, this->pD3DDevice);
 	this->meshController.CreateMeshBuffer(hwnd, this->pD3DDevice);
 
+	
+
 	this->camera.SetProjectionValues((float)this->windowWidth / (float)this->windowHeight);
+
 
 	return true;
 }
@@ -29,6 +32,49 @@ void Graphics::Set(Sprite* sprite, int total, Mesh * mesh, int meshTotal)
 
 	this->Init_light();
 	this->InitializeVB();
+}
+
+void Graphics::DrawBillboard(D3DXVECTOR3 pos, D3DXVECTOR2 size, int index)
+{
+	pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	pD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	pD3DDevice->SetRenderState(D3DRS_ALPHAREF, 0x000000f0);
+	pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+	D3DXMATRIX billboard;
+	D3DXMATRIX	mtxTrs;
+	D3DXMATRIX	mtxRot;
+	D3DXMATRIX	mtxScl;
+	D3DXMATRIX  mtxLocal;
+
+	D3DXMatrixIdentity(&mtxLocal);
+
+	D3DXMatrixScaling(&mtxScl, size.x, size.y, 1.0f);
+	D3DXMatrixMultiply(&mtxLocal, &mtxLocal, &mtxScl);	//World*Scaling
+
+	D3DXMatrixMultiply(&billboard, &billboard, &mtxLocal);	//World*Tranlation
+
+	D3DXMatrixInverse(&billboard, NULL, &this->camera.GetViewMatrix());
+	billboard._41 = billboard._42 = billboard._43 = 0.0f;
+
+	//平行移動行列を作成＆ワールド行列への合成
+	D3DXMatrixTranslation(&mtxTrs, pos.x, pos.y, pos.z);
+	D3DXMatrixMultiply(&billboard, &billboard, &mtxTrs);	//World*Tranlation
+
+	D3DXMatrixMultiply(&billboard, &billboard, &mtxLocal);	//World*Scaling
+
+
+	//ワールドマトリックスを設定
+	this->pD3DDevice->SetTransform(D3DTS_WORLD, &billboard);
+	//描画したいポリゴンの頂点フォーマットを設定
+	this->pD3DDevice->SetFVF(FVF_VERTEX3D);
+
+	//描画したいポリゴンの頂点バッファをデータストリーム(データの通り道)にセット
+	this->pD3DDevice->SetStreamSource(0, pVB_Sprite, 0, sizeof(VERTEX_3D));
+	this->pD3DDevice->SetTexture(0, this->textureController.GetTexture((TextureIndex)index));
+
+	this->pD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
 }
 
 LPDIRECT3DDEVICE9 Graphics::GetDevice()
@@ -47,10 +93,13 @@ void Graphics::RenderFrame()
 
 	this->pD3DDevice->SetTransform(D3DTS_VIEW, &this->camera.GetViewMatrix());
 	this->pD3DDevice->SetTransform(D3DTS_PROJECTION, &this->camera.GetProjectionMatrix());
+	
+
+
 
 	//============================================================================================
 	//Draw 3D mesh model
-
+	
 	this->DrawWall();
 	this->Draw();
 	//============================================================================================
@@ -228,6 +277,8 @@ bool Graphics::InitializeVB()
 
 	//頂点データをアンロックする
 	this->pVB_Sprite->Unlock();
+
+
 
 
 	//オブジェクトの頂点バッファを生成
@@ -513,6 +564,7 @@ void Graphics::DrawUI()
 {
 	for (int index = 0; index < totalSprites; index++)
 	{
+
 		D3DXVECTOR3 center(0, 0, 0.0f);    // center at the upper-left corner
 		D3DXVECTOR3 position(this->pSprite[index].pos.x, this->pSprite[index].pos.y, this->pSprite[index].pos.z);    // position at 50, 50 with no depth
 

@@ -4,11 +4,6 @@
 
 //PARAM FOR MESH
 #define PLAYER_POS		Game1_mesh[0].pos
-
-//PARAM FOR SPRITE
-#define TARGET1_POS		Game1_sprite[1].pos
-
-
 #define CAMERA_SPD		(0.1f)
 
 class Game1 :
@@ -20,11 +15,15 @@ public:
 	bool Draw();
 private:
 	D3DXVECTOR3 player;
-	D3DXVECTOR3 recPlayer;
+	D3DXVECTOR3 recPos;
+	D3DXVECTOR3 nextPos;
 	Handhold handhold;
 
 
 	LPD3DXFONT			pDXfont;    // the pointer to the font object
 	int					CountDown = 90;
+	bool				Rdy = true;
+	bool				ReDistance = false;
+	bool				AlreadySend = false;
 };
 

@@ -1,13 +1,13 @@
 #pragma once
+
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
 #include <string>
 #include <thread>
-//using namespace std;
 
 #pragma comment (lib, "Ws2_32.lib")
 
-#define IP_ADDRESS "192.168.11.2"
+#define IP_ADDRESS "10.205.126.238"
 #define DEFAULT_PORT "3504"
 
 struct CLIENT_MSG
