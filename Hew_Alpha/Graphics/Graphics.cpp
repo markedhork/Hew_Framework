@@ -14,8 +14,6 @@ bool Graphics::Initialize(HWND hwnd, int width, int height)
 	this->textureController.Load(hwnd, this->pD3DDevice);
 	this->meshController.CreateMeshBuffer(hwnd, this->pD3DDevice);
 
-	
-
 	this->camera.SetProjectionValues((float)this->windowWidth / (float)this->windowHeight);
 
 
@@ -93,26 +91,17 @@ void Graphics::RenderFrame()
 
 	this->pD3DDevice->SetTransform(D3DTS_VIEW, &this->camera.GetViewMatrix());
 	this->pD3DDevice->SetTransform(D3DTS_PROJECTION, &this->camera.GetProjectionMatrix());
-	
-
-
 
 	//============================================================================================
 	//Draw 3D mesh model
-	
+
 	this->DrawWall();
 	this->Draw();
 	//============================================================================================
 
-
 	this->pD3Dspt->Begin(D3DXSPRITE_ALPHABLEND);    // begin sprite drawing
-
 	this->DrawUI();
-
-
 	this->pD3Dspt->End();    // end sprite drawing
-
-
 }
 
 void Graphics::RenderFrame_end()
@@ -234,7 +223,7 @@ void Graphics::Init_light()
 	pD3DDevice->SetLight(3, &light[3]);
 	pD3DDevice->LightEnable(3, TRUE);
 
-	
+
 }
 
 
@@ -521,42 +510,50 @@ void Graphics::DrawWall()
 void Graphics::Draw()
 {
 
-	pD3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	D3DXMATRIX mtxScl;					//スケーリング行列
 	D3DXMATRIX mtxRot;					//回転行列
 	D3DXMATRIX mtxTrs;					//平行移動行列
 
-	
+
 
 	for (int j = 0; j < totalMesh; j++)
 	{
+		pD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+		pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
 		D3DXMatrixIdentity(&mtxWorld);	//ワールド行列の単位行列の初期化
-	//スケール行列を作成＆ワールド行列へ合成
 		D3DXMatrixScaling(&mtxScl, this->pMesh[j].size.x, this->pMesh[j].size.y, 1);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxScl);	//World*Scaling
-
-		
 		//回転行列を作成＆ワールド行列への合成
 		D3DXMatrixRotationYawPitchRoll(&mtxRot, D3DXToRadian(this->pMesh[j].rot.y), D3DXToRadian(this->pMesh[j].rot.x), D3DXToRadian(this->pMesh[j].rot.z));
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);	//World*Rotation
 		//平行移動行列を作成＆ワールド行列への合成
 		D3DXMatrixTranslation(&mtxTrs, this->pMesh[j].pos.x, this->pMesh[j].pos.y, this->pMesh[j].pos.z);
 		D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrs);	//World*Tranlation
-
 		pD3DDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
-		pD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-		pD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+		
+		int maxTrack = this->meshController.meshObj[j].AnimationController->GetMaxNumTracks();
 
-
-		for (int i = 0; i < this->meshController.mesh_members[pMesh[j].index].numMaterials; i++)    // loop through each subset
+		if (this->meshController.meshObj[j].AnimationController)
 		{
-			pD3DDevice->SetMaterial(&this->meshController.mesh_members[pMesh[j].index].material[i]);    // set the appropriate material for the subset
-			if (this->meshController.mesh_members[pMesh[j].index].texture[i] != NULL)    // if the subset has a texture (if texture is not NULL)
-				pD3DDevice->SetTexture(0, this->meshController.mesh_members[pMesh[j].index].texture[i]);    // ...then set the texture
-
-			this->meshController.mesh_members[pMesh[j].index].pDXMeshModel->DrawSubset(i);    // draw the subset
+			static DWORD cTime = GetTickCount();
+			// move the animation forward by the elapsed time
+			this->meshController.meshObj[j].AnimationController->AdvanceTime((GetTickCount() - cTime) * 0.0001f, NULL);
+			// reset Time for the next time through
+			cTime = GetTickCount();
 		}
+
+		// update each combined matrix
+		this->meshController.update_frames(j, (CUSTOM_FRAME*)this->meshController.meshObj[j].TopFrame, NULL);
+
+		// update the mesh containers
+		this->meshController.update_mesh_containers(j, (CUSTOM_FRAME*)this->meshController.meshObj[j].TopFrame);
+
+		// render each mesh container
+		this->meshController.draw_mesh(j, (CUSTOM_FRAME*)this->meshController.meshObj[j].TopFrame);
+
 	}
 }
 
